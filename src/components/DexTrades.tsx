@@ -12,13 +12,13 @@ const DexTrades = () => {
       ETH: { usdValue: '0', WETH: '0', CGT: '0' },
       BSC: { usdValue: '0', WBNB: '0', CGT: '0' }
     }
-  } } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/uniswap-data', fetcher, { 
+  } } = useSWR('/api/uniswap-data', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
     dedupingInterval: 900000 // 15 minutes
   })
-  const { data: marketPrices = {} } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/marketPrices', fetcher, { 
+  const { data: marketPrices = {} } = useSWR('/api/marketPrices', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
