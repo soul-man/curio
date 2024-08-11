@@ -3,7 +3,7 @@
   <p>Get the latest market data related to CURIO-DAO</p>
 </div>
 
-![Screenshot of Curio Info intro screen.](https://github.com/soul-man/first-movers-club/blob/main/public/images/preview/fm-preview01.png?raw=true)
+![Screenshot of Curio Info intro screen.](https://github.com/soul-man/curio/blob/master/public/images/curio.jpg?raw=true)
 
 ## Features
 
