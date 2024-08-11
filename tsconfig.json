@@ -10,8 +10,8 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
-    "resolveJsonModule": false,
-    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "isolatedModules": false,
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
