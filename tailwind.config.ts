@@ -1,10 +1,11 @@
-const defaultTheme = require("tailwindcss/defaultTheme");
-const svgToDataUri = require("mini-svg-data-uri");
-const colors = require("tailwindcss/colors");
+import defaultTheme from "tailwindcss/defaultTheme";
+import svgToDataUri from "mini-svg-data-uri";
 const { default: flattenColorPalette, } = require("tailwindcss/lib/util/flattenColorPalette");
 
+export {};  // Ensure the file is treated as a module
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: ["./src/**/*.{ts,tsx}"],
   darkMode: "selector",
   theme: {
@@ -49,3 +50,5 @@ function addVariablesForColors({ addBase, theme }: any) {
     ":root": newVars,
   });
 }
+
+export default config;  // Export the config object
