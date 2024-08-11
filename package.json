@@ -34,6 +34,7 @@
     "axios-cache-adapter": "^2.7.3",
     "clsx": "^2.1.1",
     "coinmarketcap-api": "^3.1.1",
+    "ethers": "5.7.2",
     "framer-motion": "^11.2.10",
     "graphql": "^16.9.0",
     "lucide-react": "^0.376.0",

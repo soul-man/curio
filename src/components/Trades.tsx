@@ -5,7 +5,7 @@ import { SiBinance } from 'react-icons/si';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 import { TbSum } from "react-icons/tb";
-import { AppleCardsCarousel } from "@/components/cards/CardsCarousel";
+import AppleCardsCarousel from "@/components/cards/CardsCarousel";
 
 interface Trade {
   type: 'buy' | 'sell';

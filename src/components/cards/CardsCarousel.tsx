@@ -6,7 +6,39 @@ import { TbSum } from "react-icons/tb";
 import { FaEthereum } from 'react-icons/fa';
 import { SiBinance } from 'react-icons/si';
 
-export function AppleCardsCarousel({ liquidity, sortedTrades, totalCGTTraded, biggestTrade, smallestTrade }) {
+interface Trade {
+    type: 'buy' | 'sell';
+    timestamp: number;
+    amount0: string;
+    amount1: string;
+    priceImpact: string;
+    transactionHash: string;
+    chain: 'ETH' | 'BSC';
+    usdValue: string;
+    pricePerToken: string;
+    tradeSize: 'Small' | 'Medium' | 'Large';
+}
+
+interface CarouselProps {
+    liquidity: {
+        ETH: {
+          usdValue: string;
+          WETH: string;
+          CGT: string;
+        };
+        BSC: {
+          usdValue: string;
+          WBNB: string;
+          CGT: string;
+        };
+      };
+    sortedTrades: Trade[];
+    totalCGTTraded: number;
+    biggestTrade: number;
+    smallestTrade: number;
+  };
+
+const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, totalCGTTraded, biggestTrade, smallestTrade  }) => {
     const data = [
         {
             category: "Trading Statistics",
@@ -303,3 +335,5 @@ export function AppleCardsCarousel({ liquidity, sortedTrades, totalCGTTraded, bi
         </div>
     );
 }
+
+export default AppleCardsCarousel;

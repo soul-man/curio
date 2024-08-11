@@ -108,8 +108,8 @@ const INITIAL_BACKOFF = 1000; // 1 second
 const rateLimiter = {
   lastCallTime: 0,
   queue: [] as (() => void)[],
-  async throttle(fn: () => Promise<any>) {
-    return new Promise((resolve) => {
+  async throttle<T>(fn: () => Promise<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
       const execute = async () => {
         const now = Date.now();
         if (now - this.lastCallTime < 100) { // 100ms = 10 calls per second
@@ -119,7 +119,7 @@ const rateLimiter = {
         try {
           resolve(await fn());
         } catch (error) {
-          resolve(Promise.reject(error));
+          reject(error);
         }
         this.queue.shift();
         if (this.queue.length > 0) {
@@ -326,7 +326,9 @@ async function getPoolLiquidity(web3: Web3, poolAddress: string, chain: 'ETH' | 
       ]);
       
       // Convert balances to ether units
+      // @ts-ignore
       const token0Amount = web3.utils.fromWei(token0Balance, 'ether');
+      // @ts-ignore
       const token1Amount = web3.utils.fromWei(token1Balance, 'ether');
       
       // Get current market prices
