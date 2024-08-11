@@ -238,7 +238,7 @@ async function getTradesForChain(web3: Web3, poolAddress: string, chain: 'ETH' |
   const fromBlock = latestBlock - blocksFor24Hours > 0n ? latestBlock - blocksFor24Hours : 0n;
   console.log(`Fetching events from block ${fromBlock.toString()} to ${latestBlock.toString()} on ${chain}`);
 
-  let events;
+  let events: any[];
   try {
       events = await getEventsInChunks(pool, fromBlock, latestBlock, chain);
       console.log(`Total number of events found on ${chain}: ${events.length}`);
