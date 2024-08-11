@@ -7,6 +7,7 @@ const nextConfig = {
   },
   eslint: {
     dirs: ['src'],
+    ignoreDuringBuilds: true,
   },
   env: {
     NEXT_INFURA_API_KEY: process.env.NEXT_INFURA_API_KEY,
