@@ -27,9 +27,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Query the total staked amount
       const totalStaked = await api.query.parachainStaking.totalCollatorStake();
 
+      console.log('totalStaked: ', totalStaked)
+
       await api.disconnect();
 
       // Format the result
+      // @ts-ignore
       const formattedResult = formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
 
       // Store the result in the cache
