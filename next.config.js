@@ -12,6 +12,7 @@ const nextConfig = {
   env: {
     NEXT_INFURA_API_KEY: process.env.NEXT_INFURA_API_KEY,
     NEXT_MORALIS_API_KEY: process.env.NEXT_MORALIS_API_KEY,
+    NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,
   },
 
   reactStrictMode: true,

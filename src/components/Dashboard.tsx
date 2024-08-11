@@ -82,7 +82,7 @@ const chainInfo: Record<string, ChainInfoType> = {
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
 
 const Dashboard = () => {
-  const { data: staking = 0 } = useSWR('/api/staking', fetcher, { 
+  const { data: staking = 0 } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/staking', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
@@ -100,13 +100,13 @@ const Dashboard = () => {
     atl: 0,
     atlTime: '',
     atlChange: 0
-  } } = useSWR('/api/cgtMarketData', fetcher, { 
+  } } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/cgtMarketData', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
     dedupingInterval: 900000 // 15 minutes
   })
-  const { data: supply = {} } = useSWR('/api/cgtSupply', fetcher, { 
+  const { data: supply = {} } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/cgtSupply', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
@@ -115,7 +115,7 @@ const Dashboard = () => {
   const { data: liquidity = {
     ETH: { usdValue: "0", WETH: "0", CGT: "0" },
     BSC: { usdValue: "0", WBNB: "0", CGT: "0" }
-  } } = useSWR('/api/uniswap-data', fetcher, { 
+  } } = useSWR(process.env.NEXT_HOST_BASE_URL + '/api/uniswap-data', fetcher, { 
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     refreshInterval: 0,
