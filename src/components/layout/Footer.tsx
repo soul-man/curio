@@ -26,7 +26,7 @@ export default function Footer() {
         <div className='pt-2 lg:pt-0'>
           {/* <p className="mb-1 text-md text-gray-200/80 text-center md:text-right mt-3 md:pt-0">&copy; {new Date().getFullYear()} - mint-heaven.xyz</p> */}
           <div className="text-blue-300/70">
-            <div className="flex flex-col lg:flex-row justify-center md: justify-end mt-3 md:mt-0 gap-2">
+            <div className="flex flex-col lg:flex-row justify-center md: md:justify-end mt-3 md:mt-0 gap-2">
               <span className="text-sm flex items-center justify-center text-blue-300/70">
                 made with couriosity by Soulman <FaRegHeart className="hidden md:block mx-2 text-red-600 text-xl" />
                 and some help of AI{' '}
