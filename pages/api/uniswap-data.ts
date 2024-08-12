@@ -201,7 +201,7 @@ async function getBlockTimestamp(web3: Web3, blockNumber: number, chain: 'ETH' |
 
 async function getPrices(): Promise<{cgt: number; eth: number, bnb: number }> {
     try {
-      const response = await fetch('http://localhost:3000/api/marketPrices');
+      const response = await fetch(process.env.NEXT_HOST_BASE_URL + '/api/marketPrices');
       const data = await response.json();
       return {
         eth: data.eth,
