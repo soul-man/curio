@@ -101,14 +101,16 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
 
   if (!trades || trades.length === 0) {
     return (
-      <div className="max-w-screen-xl mx-auto px-5 mb-16">
-        <h3 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-5 text-black/90 dark:text-white !leading-[4.2rem]">
-          CGT <span className="font-bold bg-gradient-to-r from-blue-500 to-blue-800 inline-block text-transparent bg-clip-text">Trade</span> History
-        </h3>
-        <div className="w-full bg-black/30 p-6 rounded-lg border-blue-600/10 border-2">
-          <p className="text-white/70">No trade data available at the moment.</p>
+      <div className='flex flex-col md:flex-col mb-10 md:mb-10 px-5'>
+      <h3 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white">Pools and <span className="font-bold bg-gradient-to-r from-[#0A85E1] to-[#0763A7] inline-block text-transparent bg-clip-text"> Latest Trades</span></h3>
+      <p className="text-lg sm:text-xl md:text-2xl w-full font-extralight text-blue-300/80">
+        24h trade data from the Uniswap V3 (ETH) and PancakeSwap V3 (BSC) pools. USD values are estimates based on current ETH/BNB prices. 
+        Data updates every 15 mins!
+      </p>
+      <div className="mt-5 text-lg sm:text-2xl md:text-4xl">
+          <p className="text-white/80">Loading...</p>
         </div>
-      </div>
+    </div>
     );
   }
 
@@ -149,7 +151,7 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
         </p>
       </div>
 
-      <div className="w-full p-6 rounded-md bg-[#064081]" style={{backgroundImage: "url('./images/backgrounds/1-card-bg-3to2.png')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className="w-full p-2 md:p-6 rounded-md bg-[#064081]" style={{backgroundImage: "url('./images/backgrounds/1-card-bg-3to2.png')", backgroundSize: 'cover', backgroundPosition: 'center'}}>
       
 
         <AppleCardsCarousel 
@@ -231,7 +233,7 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
                         <SiBinance className="text-xl text-yellow-400" title="Binance Smart Chain" />
                       )}
                     </div>
-                    <div className="w-[10%] text-blue-300/60 text-xs">{format(trade.timestamp * 1000)}</div>
+                    <div className="w-[10%] text-white/70 text-xs">{format(trade.timestamp * 1000)}</div>
 
                     <div className=" w-[22%] flex flex-row justify-between bg-black/20 py-1 px-3 rounded-md">
                       <div className="w-[40%] text-blue-200/80">

@@ -44,25 +44,50 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "Trading Statistics",
             title: "24h Trades",
             src: "/images/tokens/cgt.png",
+
             content: (
-                <div className="flex flex-col h-full w-80">
+                <div className="flex flex-col h-full w-72 md:w-80">
                     <div className="flex flex-col bg-black/40 rounded-md p-5 flex-grow justify-between">
                         <div className="flex justify-between items-center mb-4 bg-black/40 p-1 pl-3 rounded-md">
-                            <span className="text-xl font-normal text-white">24h Trades</span>
-                            <span className="bg-blue-500/80 text-white px-3 py-1 rounded-md text-xl">{sortedTrades.length}</span>
+                            <span className="text-lg md:text-xl font-normal text-white">24h Trades</span>
+                            <span className="bg-blue-500/80 text-white px-2 md:px-3 py-0.5 md:py-1 rounded-md text-lg md:text-xl">{sortedTrades.length}</span>
                         </div>
                         <div className="flex flex-col gap-2 mt-auto">
                             <div className="flex justify-between items-center">
-                                <span className="text-yellow-400 flex items-center text-md"><TbSum className="mr-1" /> Total Traded</span>
-                                <span className="bg-white text-black px-2 py-1 rounded-md text-sm">{totalCGTTraded.toLocaleString()} CGT</span>
+                                <span className="text-yellow-400 flex items-center text-sm md:text-md"><TbSum className="mr-1" /> Total Traded</span>
+                                <span className="bg-white text-black px-2 py-1 rounded-md text-sm">
+                                    {Number(totalCGTTraded).toLocaleString(
+                                        'en-US',
+                                        {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0
+                                        }
+                                    )} CGT
+                                </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-blue-400 text-md">Biggest Trade</span>
-                                <span className="bg-black/40 text-white px-2 py-1 rounded-md text-sm">{biggestTrade.toLocaleString()} CGT</span>
+                                <span className="text-blue-400 text-sm md:text-md">Biggest Trade</span>
+                                <span className="bg-black/40 text-white px-2 py-1 rounded-md text-sm">
+                                    {Number(biggestTrade).toLocaleString(
+                                        'en-US',
+                                        {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0
+                                        }
+                                    )} CGT
+                                </span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-blue-300 text-md">Smallest Trade</span>
-                                <span className="bg-black/40 text-white px-2 py-1 rounded-md text-sm">{smallestTrade.toLocaleString()} CGT</span>
+                                <span className="text-blue-300 text-sm md:text-md">Smallest Trade</span>
+                                <span className="bg-black/40 text-white px-2 py-1 rounded-md text-sm">
+                                {   Number(smallestTrade).toLocaleString(
+                                        'en-US',
+                                        {
+                                            minimumFractionDigits: 0,
+                                            maximumFractionDigits: 0
+                                        }
+                                    )} CGT
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -73,8 +98,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "Ethereum Pool",
             title: "CGT/WETH",
             src: "/images/chains/ethereum.png",
+            exchangeLink: "https://app.uniswap.org/",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
                     <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-t-md">
                         <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-pink-500 text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
                             <span className="px-0.5 py-0.5 text-sm">
@@ -115,8 +141,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "Binance Smart Chain Pool",
             title: "CGT/WBNB",
             src: "/images/tokens/bnb.png",
+            exchangeLink: "https://pancakeswap.finance/",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
 
                 <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-md">
                     <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-[#3ED1DB] text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
@@ -158,8 +185,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "TON Pool",
             title: "jCGT2.0/USD₮",
             src: "/images/tokens/usdt.png",
+            exchangeLink: "https://capitaldex.exchange/swap?chain=ton",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
                     <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-t-md">
                         <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-gray-200 text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
                             <span className="px-0.5 py-0.5 text-sm">
@@ -200,8 +228,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "TON Pool",
             title: "jCGT2.0/TON",
             src: "/images/chains/ton.png",
+            exchangeLink: "https://capitaldex.exchange/swap?chain=ton",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
                     <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-t-md">
                         <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-gray-200 text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
                             <span className="px-0.5 py-0.5 text-sm">
@@ -242,8 +271,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "CURIO Pool",
             title: "CGT/USDC",
             src: "/images/tokens/usdc.svg",
+            exchangeLink: "https://capitaldex.exchange/swap?chain=curio-parachain",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
                     <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-t-md">
                         <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-gray-200 text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
                             <span className="px-0.5 py-0.5 text-sm">
@@ -284,8 +314,9 @@ const AppleCardsCarousel: React.FC<CarouselProps> = ({ liquidity, sortedTrades, 
             category: "CURIO Pool",
             title: "CGT/DAI",
             src: "/images/tokens/dai.png",
+            exchangeLink: "https://capitaldex.exchange/swap?chain=curio-parachain",
             content: (
-                <div className="flex flex-col w-80">
+                <div className="flex flex-col w-72 md:w-80">
                     <div className="flex flex-col items-center bg-black/40 pb-3 px-6 rounded-t-md">
                         <div className="flex flex-row gap-5 justify-center items-center w-10/12 bg-black/30 text-gray-200 text-center border-b border-blue-300/10 py-1 px-2 mb-4 rounded-b-md">
                             <span className="px-0.5 py-0.5 text-sm">

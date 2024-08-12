@@ -21,6 +21,7 @@ type Card = {
   title: string;
   category: string;
   content: React.ReactNode;
+  exchangeLink: string;
 };
 
 export const CarouselContext = createContext<{
@@ -154,16 +155,16 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
             ))}
           </div>
         </div>
-        <div className="flex gap-2 justify-between mt-3 mb-10">
+        <div className="flex gap-2 justify-center md:justify-between mt-3 mb-10">
           <button
-            className="relative z-40 h-10 w-10 rounded-md bg-blue-600 flex items-center justify-center disabled:opacity-50 text-white"
+            className="relative z-40 h-10 w-20 rounded-md bg-blue-600 flex items-center justify-center disabled:opacity-50 text-white"
             onClick={scrollLeft}
             disabled={!canScrollLeft}
           >
             &lt;
           </button>
           <button
-            className="relative z-40 h-10 w-10 rounded-md bg-blue-600 flex items-center justify-center disabled:opacity-50 text-white"
+            className="relative z-40 h-10 w-20 rounded-md bg-blue-600 flex items-center justify-center disabled:opacity-50 text-white"
             onClick={scrollRight}
             disabled={!canScrollRight}
           >
@@ -218,53 +219,15 @@ export const Card = ({
 
   return (
     <>
-      <AnimatePresence>
-        {open && (
-          <div className="fixed inset-0 h-screen z-50 overflow-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="bg-black/80 backdrop-blur-lg h-full w-full fixed inset-0"
-            />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              ref={containerRef}
-              layoutId={layout ? `card-${card.title}` : undefined}
-              className="max-w-5xl mx-auto bg-[#083567] h-fit z-[60] my-10 p-4 md:p-10 rounded-3xl font-sans relative"
-            >
-              <button
-                className="sticky top-4 h-8 w-8 right-0 ml-auto bg-blue-600 rounded-full flex items-center justify-center text-white"
-                onClick={handleClose}
-              >
-                X
-              </button>
-              <motion.p
-                layoutId={layout ? `category-${card.title}` : undefined}
-                className="text-base font-medium text-blue-300"
-              >
-                {card.category}
-              </motion.p>
-              <motion.p
-                layoutId={layout ? `title-${card.title}` : undefined}
-                className="text-2xl md:text-5xl font-semibold text-white mt-4"
-              >
-                {card.title}
-              </motion.p>
-              <div className="py-10">{card.content}</div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-      <motion.div
-        layoutId={layout ? `card-${card.title}` : undefined}
-        onClick={handleOpen}
-        className="h-auto overflow-hidden flex flex-col items-start justify-start relative z-10"
-      >
-        {card.content}
-      </motion.div>
+      <a href={card.exchangeLink} target="_blank" rel="noopener noreferrer">
+        <motion.div
+          layoutId={layout ? `card-${card.title}` : undefined}
+          onClick={handleOpen}
+          className="h-auto overflow-hidden flex flex-col items-start justify-start relative z-10"
+        >
+          {card.content}
+        </motion.div>
+      </a>
     </>
   );
 };

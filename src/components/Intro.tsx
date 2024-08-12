@@ -31,15 +31,15 @@ const Intro = () => {
           </div>
         </div>
 
-        <div className="flex flex-col min-h-[350px] z-30 md:mb-40 lg:mb-32">
+        <div className="flex flex-col justify-center min-h-[350px] z-30 md:mb-40 lg:mb-32">
           <div className="flex flex-col pl-5 justify-center items-center md:justify-start md:items-start">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-2 md:-mb-1">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-2 md:-mb-1">
               CURIO INSIGHTS
             </h1>
-            <h2 className="md:tracking-[0.175rem] lg:tracking-[0.5rem] w-fit px-5 py-1 bg-black/70 md:bg-blue-400/70 rounded-md mb-10 md:mt-3 text-lg md:text-2xl lg:text-2xl font-thin text-blue-100 md:dark:text-blue-100/80">
+            <h2 className="md:tracking-[0.175rem] lg:tracking-[0.5rem] w-fit px-5 py-1 bg-black/70 md:bg-blue-400/70 rounded-md mb-5 md:mb-10 md:mt-3 text-lg md:text-2xl lg:text-2xl font-thin text-blue-100 md:dark:text-blue-100/80">
               We bring RWA to the masses
             </h2>
-            <p className="pl-2 w-12/12 md:w-6/12 lg:w-4/12 md:mt-3 text-lg md:text-3xl font-thin text-white md:text-white lg:text-blue-300">
+            <p className="pl-2 w-12/12 md:w-6/12 lg:w-4/12 md:mt-3 text-xl md:text-3xl font-thin text-white md:text-white lg:text-blue-300">
             We offer unparalleled analytics to support the CURIO DAO. 
             Explore a comprehensive RWA ecosystem and keep track of market data through our Dashboards.
             </p>
