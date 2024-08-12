@@ -162,26 +162,26 @@ async function fetchWithRetry(fetchFn: () => Promise<any>, chain: 'ETH' | 'BSC',
 async function getEventsInChunks(pool: any, fromBlock: bigint, toBlock: bigint, chain: 'ETH' | 'BSC', chunkSize: bigint = BigInt(5000)) {
   let allEvents: any[] = [];
   for (let i = fromBlock; i <= toBlock; i += chunkSize) {
-      const endBlock = i + chunkSize - BigInt(1) > toBlock ? toBlock : i + chunkSize - BigInt(1);
-      try {
-          const events = await fetchWithRetry(() => 
-              pool.getPastEvents('Swap', {
-                  fromBlock: i.toString(),
-                  toBlock: endBlock.toString()
-              })
-          , chain);
-          allEvents = allEvents.concat(events);
-      } catch (error) {
-          console.error(`Error fetching events for block range ${i.toString()} - ${endBlock.toString()}:`, error);
-          if (chunkSize > BigInt(100)) {
-              console.log(`Reducing chunk size and retrying...`);
-              const newChunkSize = chunkSize / BigInt(2);
-              const eventsInSmallerChunks = await getEventsInChunks(pool, i, endBlock, chain, newChunkSize);
-              allEvents = allEvents.concat(eventsInSmallerChunks);
-          } else {
-              console.error(`Skipping block range ${i.toString()} - ${endBlock.toString()} due to persistent errors`);
-          }
+    const endBlock = i + chunkSize - BigInt(1) > toBlock ? toBlock : i + chunkSize - BigInt(1);
+    try {
+      const events = await fetchWithRetry(() => 
+        pool.getPastEvents('Swap', {
+          fromBlock: i.toString(),
+          toBlock: endBlock.toString()
+        })
+      , chain);
+      allEvents = allEvents.concat(events);
+    } catch (error) {
+      console.error(`Error fetching events for block range ${i.toString()} - ${endBlock.toString()}:`, error);
+      if (chunkSize > BigInt(100)) {
+        console.log(`Reducing chunk size and retrying...`);
+        const newChunkSize = chunkSize / BigInt(2);
+        const eventsInSmallerChunks = await getEventsInChunks(pool, i, endBlock, chain, newChunkSize);
+        allEvents = allEvents.concat(eventsInSmallerChunks);
+      } else {
+        console.error(`Skipping block range ${i.toString()} - ${endBlock.toString()} due to persistent errors`);
       }
+    }
   }
   return allEvents;
 }
@@ -230,68 +230,77 @@ async function getTradesForChain(web3: Web3, poolAddress: string, chain: 'ETH' |
   const poolABI = chain === 'ETH' ? ETH_POOL_ABI : BSC_POOL_ABI;
   const pool = new web3.eth.Contract(poolABI, poolAddress);
 
-  const latestBlock = BigInt(await web3.eth.getBlockNumber());
-  console.log(`Latest block on ${chain}: ${latestBlock.toString()}`);
+  let latestBlock: bigint;
+  try {
+    latestBlock = BigInt(await web3.eth.getBlockNumber());
+    console.log(`Latest block on ${chain}: ${latestBlock.toString()}`);
+  } catch (error) {
+    console.error(`Error fetching latest block number for ${chain}:`, error);
+    throw error;
+  }
 
-  // Calculate the number of blocks for the last 24 hours
   const blocksFor24Hours = chain === 'ETH' ? BigInt(6646) : BigInt(2000);
   const fromBlock = latestBlock - blocksFor24Hours > 0n ? latestBlock - blocksFor24Hours : 0n;
   console.log(`Fetching events from block ${fromBlock.toString()} to ${latestBlock.toString()} on ${chain}`);
 
   let events: any[];
   try {
-      events = await getEventsInChunks(pool, fromBlock, latestBlock, chain);
-      console.log(`Total number of events found on ${chain}: ${events.length}`);
+    events = await getEventsInChunks(pool, fromBlock, latestBlock, chain);
+    console.log(`Total number of events found on ${chain}: ${events.length}`);
   } catch (error) {
-      console.error(`Error fetching events for ${chain}:`, error);
-      return [];
+    console.error(`Error fetching events for ${chain}:`, error);
+    throw error;
   }
 
   if (events.length === 0) {
-      console.log(`No events found for ${chain} in the last 5000 blocks.`);
-      return [];
+    console.log(`No events found for ${chain} in the last 5000 blocks.`);
+    return [];
   }
 
-  const prices = await getPrices();
+  let prices: { cgt: number; eth: number; bnb: number };
+  try {
+    prices = await getPrices();
+  } catch (error) {
+    console.error(`Error fetching prices:`, error);
+    throw error;
+  }
+
   const price = chain === 'ETH' ? prices.eth : prices.bnb;
 
   let currentSqrtPriceX96: bigint;
   try {
-      const slot0 = await pool.methods.slot0().call();
-      currentSqrtPriceX96 = BigInt(slot0.sqrtPriceX96);
+    const slot0 = await pool.methods.slot0().call();
+    currentSqrtPriceX96 = BigInt(slot0.sqrtPriceX96);
   } catch (error) {
-      console.error(`Error fetching slot0 for ${chain}:`, error);
-      currentSqrtPriceX96 = 0n;
+    console.error(`Error fetching slot0 for ${chain}:`, error);
+    currentSqrtPriceX96 = 0n;
   }
 
   const trades: Trade[] = await Promise.all(events.map(async (event: any, index: number) => {
-    const timestamp = await getBlockTimestamp(web3, event.blockNumber, chain);
-    const amount0 = BigInt(event.returnValues.amount0);
-    const amount1 = BigInt(event.returnValues.amount1);
-    const tokenAmount = parseFloat(web3.utils.fromWei(amount0.toString(), 'ether')).toFixed(2);
+    try {
+      const timestamp = await getBlockTimestamp(web3, event.blockNumber, chain);
+      const amount0 = BigInt(event.returnValues.amount0);
+      const amount1 = BigInt(event.returnValues.amount1);
+      const tokenAmount = parseFloat(web3.utils.fromWei(amount0.toString(), 'ether')).toFixed(2);
 
-    // Fix for the minus sign in amount1
-    let ethAmount = web3.utils.fromWei(amount1.toString(), 'ether');
-    ethAmount = ethAmount.startsWith('-') 
-      ? '-' + ethAmount.substring(1).replace('-', '')
-      : ethAmount.replace('-', '');
-    
-    // Ensure USD value is always positive
-    const usdValue = (Math.abs(parseFloat(ethAmount)) * price).toFixed(2);
-    // Ensure price per token is always positive
-    const pricePerToken = (Math.abs(parseFloat(ethAmount)) / Math.abs(parseFloat(tokenAmount))).toFixed(8);
+      let ethAmount = web3.utils.fromWei(amount1.toString(), 'ether');
+      ethAmount = ethAmount.startsWith('-') 
+        ? '-' + ethAmount.substring(1).replace('-', '')
+        : ethAmount.replace('-', '');
+      
+      const usdValue = (Math.abs(parseFloat(ethAmount)) * price).toFixed(2);
+      const pricePerToken = (Math.abs(parseFloat(ethAmount)) / Math.abs(parseFloat(tokenAmount))).toFixed(8);
 
+      const sqrtPriceX96After = BigInt(event.returnValues.sqrtPriceX96);
+      const sqrtPriceX96Before = index > 0 
+          ? BigInt(events[index - 1].returnValues.sqrtPriceX96) 
+          : currentSqrtPriceX96;
 
-    const sqrtPriceX96After = BigInt(event.returnValues.sqrtPriceX96);
-    const sqrtPriceX96Before = index > 0 
-        ? BigInt(events[index - 1].returnValues.sqrtPriceX96) 
-        : currentSqrtPriceX96;
+      const priceBefore = calculatePriceFromSqrtPriceX96(sqrtPriceX96Before);
+      const priceAfter = calculatePriceFromSqrtPriceX96(sqrtPriceX96After);
+      const priceImpact = ((priceAfter - priceBefore) / priceBefore * 100).toFixed(4);
 
-    const priceBefore = calculatePriceFromSqrtPriceX96(sqrtPriceX96Before);
-    const priceAfter = calculatePriceFromSqrtPriceX96(sqrtPriceX96After);
-    const priceImpact = ((priceAfter - priceBefore) / priceBefore * 100).toFixed(4);
-
-    return {
+      return {
         transactionHash: event.transactionHash,
         blockNumber: Number(event.blockNumber),
         timestamp,
@@ -303,103 +312,111 @@ async function getTradesForChain(web3: Web3, poolAddress: string, chain: 'ETH' |
         tradeSize: getTradeSize(tokenAmount),
         priceImpact,
         chain
-    };
+      };
+    } catch (error) {
+      console.error(`Error processing trade event:`, error);
+      throw error;
+    }
   }));
   return trades;
 }
 
 async function getPoolLiquidity(web3: Web3, poolAddress: string, chain: 'ETH' | 'BSC'): Promise<{ usdValue: string, token0: string, token1: string }> {
-    try {
-      const token0Address = chain === 'ETH' ? addresses.WETH_ETH_ADDRESS : addresses.WBNB_BNB_ADDRESS;
-      const token1Address = chain === 'ETH' ? addresses.CGT_ETH_ADDRESS : addresses.CGT_BNB_ADDRESS;
-  
-      // ERC20 ABI for balanceOf function
-      const erc20ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}];
-      
-      const token0Contract = new web3.eth.Contract(erc20ABI, token0Address);
-      const token1Contract = new web3.eth.Contract(erc20ABI, token1Address);
-      
-      // Get the balances of both tokens in the pool
-      const [token0Balance, token1Balance] = await Promise.all([
-        token0Contract.methods.balanceOf(poolAddress).call(),
-        token1Contract.methods.balanceOf(poolAddress).call()
-      ]);
-      
-      // Convert balances to ether units
-      // @ts-ignore
-      const token0Amount = web3.utils.fromWei(token0Balance, 'ether');
-      // @ts-ignore
-      const token1Amount = web3.utils.fromWei(token1Balance, 'ether');
-      
-      // Get current market prices
-      const prices = await getPrices();
-      const marketPrice = chain === 'ETH' ? prices.eth : prices.bnb;
-      
-      // Calculate USD value
-      const token0UsdValue = parseFloat(token0Amount) * marketPrice;
-      const token1UsdValue = parseFloat(token1Amount) * prices.cgt;
-      const totalUsdValue = (token0UsdValue + token1UsdValue).toFixed(2);
+  try {
+    const token0Address = chain === 'ETH' ? addresses.WETH_ETH_ADDRESS : addresses.WBNB_BNB_ADDRESS;
+    const token1Address = chain === 'ETH' ? addresses.CGT_ETH_ADDRESS : addresses.CGT_BNB_ADDRESS;
 
-      return {
-        usdValue: totalUsdValue,
-        token0: parseFloat(token0Amount).toFixed(2),
-        token1: parseFloat(token1Amount).toFixed(0)
-      };
-    } catch (error) {
-      console.error(`Error fetching liquidity for ${chain}:`, error);
-      return { usdValue: '0', token0: '0', token1: '0' };
-    }
+    // ERC20 ABI for balanceOf function
+    const erc20ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}] as const;
+    
+    const token0Contract = new web3.eth.Contract(erc20ABI, token0Address);
+    const token1Contract = new web3.eth.Contract(erc20ABI, token1Address);
+    
+    // Get the balances of both tokens in the pool
+    const [token0Balance, token1Balance] = await Promise.all([
+      token0Contract.methods.balanceOf(poolAddress).call(),
+      token1Contract.methods.balanceOf(poolAddress).call()
+    ]);
+    
+    // Convert balances to ether units
+    const token0Amount = web3.utils.fromWei(token0Balance.toString(), 'ether');
+    const token1Amount = web3.utils.fromWei(token1Balance.toString(), 'ether');
+    
+    // Get current market prices
+    const prices = await getPrices();
+    const marketPrice = chain === 'ETH' ? prices.eth : prices.bnb;
+    
+    // Calculate USD value
+    const token0UsdValue = parseFloat(token0Amount) * marketPrice;
+    const token1UsdValue = parseFloat(token1Amount) * prices.cgt;
+    const totalUsdValue = (token0UsdValue + token1UsdValue).toFixed(2);
+
+    return {
+      usdValue: totalUsdValue,
+      token0: parseFloat(token0Amount).toFixed(2),
+      token1: parseFloat(token1Amount).toFixed(0)
+    };
+  } catch (error) {
+    console.error(`Error fetching liquidity for ${chain}:`, error);
+    return { usdValue: '0', token0: '0', token1: '0' };
   }
+}
   
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  console.log('API handler started');
 
-    // Check if data is in cache
-    const cachedData = cache.get('trades');
-    if (cachedData) {
-        console.log('Returning cached data');
-        return res.status(200).json(cachedData);
-    }
+  const cachedData = cache.get('trades');
+  if (cachedData) {
+    console.log('Returning cached data');
+    return res.status(200).json(cachedData);
+  }
+  
+  try {
+    console.log('Initializing Web3 instances');
+    const infuraProviderBsc = `https://bsc-mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
+    const web3Eth = new Web3(new Web3.providers.HttpProvider(addresses.providerEth));
+    const web3Bsc = new Web3(new Web3.providers.HttpProvider(infuraProviderBsc));
+
+    console.log('Fetching ETH trades');
+    const ethTrades = await getTradesForChain(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
+    console.log(`Fetched ${ethTrades.length} ETH trades`);
+
+    console.log('Fetching ETH liquidity');
+    const ethLiquidity = await getPoolLiquidity(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
+    console.log('Fetching BSC liquidity');
+    const bscLiquidity = await getPoolLiquidity(web3Bsc, addresses.POOL_BSC_CGT_BNB, 'BSC');
     
-    try {
-        // const infuraProviderEth = `https://mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
-        const infuraProviderBsc = `https://bsc-mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
+    const allTrades = [...ethTrades].sort((a, b) => b.timestamp - a.timestamp);
+    
+    const result = {
+      trades: allTrades,
+      liquidity: {
+        ETH: {
+          usdValue: ethLiquidity.usdValue,
+          WETH: ethLiquidity.token0,
+          CGT: ethLiquidity.token1
+        },
+        BSC: {
+          usdValue: bscLiquidity.usdValue,
+          WBNB: bscLiquidity.token0,
+          CGT: bscLiquidity.token1
+        }
+      }
+    };
 
-        const web3Eth = new Web3(new Web3.providers.HttpProvider(addresses.providerEth));
-        const web3Bsc = new Web3(new Web3.providers.HttpProvider(infuraProviderBsc));
+    console.log('Caching result');
+    cache.set('trades', result, 900);
 
-        const ethTrades = await getTradesForChain(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
-        // const bscTrades = await getTradesForChain(web3Bsc, addresses.POOL_BSC_CGT_BNB, 'BSC');
-
-        const ethLiquidity = await getPoolLiquidity(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
-        const bscLiquidity = await getPoolLiquidity(web3Bsc, addresses.POOL_BSC_CGT_BNB, 'BSC');
-        
-        const allTrades = [...ethTrades].sort((a, b) => b.timestamp - a.timestamp);
-        
-        const result = {
-            trades: allTrades,
-            liquidity: {
-                ETH: {
-                    usdValue: ethLiquidity.usdValue,
-                    WETH: ethLiquidity.token0,
-                    CGT: ethLiquidity.token1
-                },
-                BSC: {
-                    usdValue: bscLiquidity.usdValue,
-                    WBNB: bscLiquidity.token0,
-                    CGT: bscLiquidity.token1
-                }
-            }
-        };
-
-        // Cache the data for 15 minutes (900 seconds)
-        cache.set('trades', result, 900);
-
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'An error occurred while fetching trades and liquidity' });
-    }
+    console.log('Sending response');
+    res.status(200).json(result);
+  } catch (error: unknown) {
+    console.error('Error in API handler:', error);
+    res.status(500).json({ 
+      error: 'An error occurred while fetching trades and liquidity', 
+      details: error instanceof Error ? error.message : String(error)
+    });
+  }
 }
