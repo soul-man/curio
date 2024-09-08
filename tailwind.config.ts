@@ -9,9 +9,12 @@ const config = {
   content: ["./src/**/*.{ts,tsx}"],
   darkMode: "selector",
   theme: {
-    fontFamily: {
-      sans: ['Lato', ...defaultTheme.fontFamily.sans],
-    },
+      fontFamily: {
+        sans: ['Spline Sans', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
+        chakra: ['Chakra Petch', 'sans-serif'],
+        lato: ['Lato', 'sans-serif'],
+      },
   },
   plugins: [
     addVariablesForColors,

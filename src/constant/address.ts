@@ -32,6 +32,20 @@ export const addresses = {
     CGT_ETH_ADDRESS: '0x0E186357c323c806C1efdad36D217F7a54b63D18',
     CGT_BNB_ADDRESS: '0x61632b49Df5CA20846b3220bFc42BDa5E32C81ad',
 
+    TON_TON_USDT: 'EQBn8irkO9ELo8OskpTq5DlGNh1G30zAazs0BvdGFn1iEwla',
+
+    // POOLS ON TON - Holder Wallet: EQBn8irkO9ELo8OskpTq5DlGNh1G30zAazs0BvdGFn1iEwla
+    TON_POOL_CGTUSDT: 'EQAvxmcZmgoM7TBT8n4euj8JIMer7dIX3IQxpHSYl2GviS99',       // Pool
+    TON_POOL_CGTUSDT_CGT: 'EQCowb2xZ0hVBMbTmU65u45A8JvdJPRhHwF0c7qMkNlyaFyP',   // token0_address
+    TON_POOL_CGTUSDT_USDT: 'EQCZyigxKetocGx1lMo3ydT4egwZXuFudklC34mSLea88ZfH',  // token1_address
+    
+
+    TON_POOL_CGTTON: 'EQBnZ8ILpiJYxGv0Yliwg9wwBf4v9_CWbboW-GqYTM5GXgvn',       // Pool
+    TON_POOL_CGTTON_CGT: 'EQCowb2xZ0hVBMbTmU65u45A8JvdJPRhHwF0c7qMkNlyaFyP',   // token0_address
+    TON_POOL_CGTTON_TON: 'EQA17wyB_VDQQHlas33FRzpaeh1LS5PiAzzDjP20cxNCl56R',
+
+    
+
     // BRIDGES
     bridge_Neon: '0xC1eD606683a3f89317d64BDA602628d68a0B4b24',
 

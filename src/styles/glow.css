@@ -1,0 +1,36 @@
+
+  
+ .neon_card {
+    width: 300px;
+    height: 400px;
+    background: #000000;
+    margin: auto;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+  }
+  
+ .neon_card::before {
+    position: absolute;
+    content: "";
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    z-index: -1;
+  }
+  
+   .neon_card::after {
+    position: absolute;
+    content: "";
+    background: linear-gradient(235deg, #89ff00, #060c21, #00bcd4);
+    top: -5px;
+    bottom: -5px;
+    left: -5px;
+    right: -5px;
+    z-index: -2;
+    filter: blur(50px);
+  }

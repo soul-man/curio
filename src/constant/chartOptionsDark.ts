@@ -2,8 +2,8 @@ import { ApexOptions } from 'apexcharts';
 
 export const chartOptionsDark: ApexOptions = {
     chart: {
-        foreColor: '#ffffff',
-        height: 200,
+        foreColor: '#5E6DAA',
+        // height: 170,
         toolbar: {
             show: false,
         },
@@ -12,11 +12,21 @@ export const chartOptionsDark: ApexOptions = {
         }
     },
     
-    colors: [ '#2463EB'],
+    colors: [ '#1092EF'], // Start color (blue)
     fill: {
-        colors: ['#2463EB'],
-        opacity: 0,
-        type: 'solid'
+        // colors: ['#2463EB'],
+        // opacity: 0.9,
+        type: 'gradient',
+        gradient: {
+          shade: 'light',
+          type: 'vertical',
+          shadeIntensity: 0.5,
+          gradientToColors: ['#1092EF'], // End color (black)
+          inverseColors: false,
+          opacityFrom: 0.9,
+          opacityTo: 0.9, // End color opacity
+          stops: [0, 100]
+        }
     },
     tooltip: {
         enabled: true,
@@ -62,8 +72,8 @@ export const chartOptionsDark: ApexOptions = {
     },
     grid: {
         show: true,
-        borderColor: '#213B69',
-        strokeDashArray: 0,
+        borderColor: '#333B5C',
+        strokeDashArray: 5,
         position: 'back',
         xaxis: {
             lines: {
@@ -96,8 +106,8 @@ export const chartOptionsDark: ApexOptions = {
         show: true,
         curve: 'smooth',
         lineCap: 'butt',
-        colors: ['#0A85E1'],
-        width: 3,
+        colors: ['#FFFFFF'],
+        width: 1,
         dashArray: 0,
     },
     xaxis: {
@@ -105,7 +115,8 @@ export const chartOptionsDark: ApexOptions = {
             show: false
         },
         axisTicks: {
-            show: true
+            show: true,
+            offsetY: 13,
         },
         tooltip: {
             enabled: false,
@@ -113,10 +124,10 @@ export const chartOptionsDark: ApexOptions = {
         labels: {
             show: true,
             hideOverlappingLabels: false,
-            offsetY: 20,
+            offsetY: 28,
             rotate: 360,
             style: {
-                colors: ['#ffffff'],
+                colors: ['#5E6DAA'],
                 fontSize: '12px',
                 fontFamily: 'Helvetica, Arial, sans-serif',
                 fontWeight: 300,
@@ -142,13 +153,13 @@ export const chartOptionsDark: ApexOptions = {
         labels: {
             show: true,
             style: {
-                colors: ['#ffffff'],
+                colors: ['#5E6DAA'],
                 fontSize: '11px',
                 fontFamily: 'Helvetica, Arial, sans-serif',
                 fontWeight: 300,
                 cssClass: 'apexcharts-yaxis-label',
             },
-            offsetX: 0,
+            offsetX: -15,
             offsetY: 0,
             rotate: 0,
             formatter: function (val: any) {

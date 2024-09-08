@@ -5,8 +5,8 @@ import { BN } from '@polkadot/util';
 
 const DECIMALS = 18;
 
-// Create a cache with a 10-minute (600 seconds) expiration
-const cache = new NodeCache({ stdTTL: 600 });
+// Create a cache with a 15-minute (900 seconds) expiration
+const cache = new NodeCache({ stdTTL: 900 });
 
 function formatBalance(balance: BN, decimals: number): number {
   return parseFloat(balance.toString()) / Math.pow(10, decimals);

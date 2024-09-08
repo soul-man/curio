@@ -1,7 +1,7 @@
 import NodeCache from "node-cache";
 import { setTimeout } from 'timers/promises';
 
-const cache = new NodeCache({ stdTTL: 600 }); // 1 minute default TTL
+const cache = new NodeCache({ stdTTL: 900 }); // 15 minute
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000; // 2 seconds
@@ -54,6 +54,8 @@ export default async function handler(req: any, res: any) {
         fetchWithRetry(urlMarketDataCgt),
         fetchWithRetry(urlHistoricalDataCgt)
       ]);
+
+      // console.log( marketData);
 
       const cgtData = {
         marketPrice: marketData.market_data.current_price.usd.toFixed(4),
