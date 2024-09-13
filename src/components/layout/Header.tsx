@@ -1,6 +1,4 @@
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { FaEthereum } from "react-icons/fa";
+import { useState } from 'react';
 
 export default function Header() {
 
@@ -17,7 +15,7 @@ export default function Header() {
         <div className="flex justify-between items-center pt-4">
           {/* Logo */}
           <div className="flex flex-row items-center gap-3">
-            <Image src="/images/logo.png" alt="Curio Insights Logo" width={35} height={35} fetchPriority="high" />
+            <img src="/images/logo.png" alt="Curio Insights Logo" width={35} height={35} />
             <a href="./" className="text-2xl md:text-3xl font-bold font-chakra text-white">
               CURIO INSIGHTS
             </a>

@@ -4,10 +4,9 @@ import { FaExternalLinkAlt, FaEthereum, FaArrowRight, FaArrowLeft, FaChevronLeft
 import { SiBinance } from 'react-icons/si';
 import { RiSortAsc, RiSortDesc } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
-import { TbSum } from "react-icons/tb";
-import AppleCardsCarousel from "@/components/cards/CardsCarousel";
 import CardLayout from '@/components/layout/common/CardLayout';
 import { GradientHeaderH4 } from '@/components/ui/GradientHeaderH4';
+import { Skeleton } from "@/components/ui/render-skeleton";
 
 
 interface Trade {
@@ -29,21 +28,9 @@ interface TradesTableProps {
     eth: number;
     bnb: number;
   };
-  liquidity: {
-    ETH: {
-      usdValue: string;
-      WETH: string;
-      CGT: string;
-    };
-    BSC: {
-      usdValue: string;
-      WBNB: string;
-      CGT: string;
-    };
-  };
 }
 
-const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidity }) => {
+const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
   const [sortField, setSortField] = useState('timestamp');
@@ -102,20 +89,20 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
     }
   };
 
-  if (!trades || trades.length === 0) {
-    return (
-      <div className='flex flex-col md:flex-col mb-10 md:mb-10 px-5'>
-      <h3 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white">Pools and <span className="font-bold bg-gradient-to-r from-[#0A85E1] to-[#0763A7] inline-block text-transparent bg-clip-text"> Latest Trades</span></h3>
-      <p className="text-lg sm:text-xl md:text-2xl w-full font-extralight text-blue-300/80">
-        24h trade data from the Uniswap V3 (ETH) and PancakeSwap V3 (BSC) pools. USD values are estimates based on current ETH/BNB prices. 
-        Data updates every 15 mins!
-      </p>
-      <div className="mt-5 text-lg sm:text-2xl md:text-4xl">
-          <p className="text-white/80">Loading...</p>
-        </div>
-    </div>
-    );
-  }
+  // if (!trades || trades.length === 0) {
+  //   return (
+  //     <div className='flex flex-col md:flex-col mb-10 md:mb-10 px-5'>
+  //     <h3 className="text-4xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-white">Pools and <span className="font-bold bg-gradient-to-r from-[#0A85E1] to-[#0763A7] inline-block text-transparent bg-clip-text"> Latest Trades</span></h3>
+  //     <p className="text-lg sm:text-xl md:text-2xl w-full font-extralight text-blue-300/80">
+  //       24h trade data from the Uniswap V3 (ETH) and PancakeSwap V3 (BSC) pools. USD values are estimates based on current ETH/BNB prices. 
+  //       Data updates every 15 mins!
+  //     </p>
+  //     <div className="mt-5 text-lg sm:text-2xl md:text-4xl">
+  //         <p className="text-white/80">Loading...</p>
+  //       </div>
+  //   </div>
+  //   );
+  // }
 
   // const sortedTrades = [...trades].sort((a, b) => b.timestamp - a.timestamp);
   const totalPages = Math.ceil(sortedTrades.length / pageSize);
@@ -143,6 +130,25 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
       : `https://bscscan.com/tx/${txHash}`;
   };
 
+  const renderStatCard = (title: string, value: string | number | null) => (
+    <div className="col-span-6 md:col-span-3">
+      <GradientHeaderH4 headline={title} />
+      {value ? (
+        <div className="mt-1 text-white text-xl lg:text-2xl font-bold">
+          {typeof value === 'number' 
+            ? Number(value).toLocaleString('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+              })
+            : value}
+          {title !== "24h trades" && " CGT"}
+        </div>
+      ) : (
+        <Skeleton className="h-8 w-32 bg-blue-500/20 mt-1" />
+      )}
+    </div>
+  );
+
   return (
     <div id="trades" className="max-w-screen-2xl mx-auto py-10 mb-16 md:mb-56 px-5">
 
@@ -163,54 +169,10 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
             <div className="flex flex-row flex-grow justify-between">
                 <div className="grid grid-cols-12 gap-5 md:gap-10">
 
-                  <div className="col-span-6 md:col-span-3">
-                    <GradientHeaderH4 headline="24h trades" />
-                    <div className="mt-1 text-white text-xl lg:text-2xl font-bold">{sortedTrades.length}</div>
-
-                  </div>
-
-                  <div className="col-span-6 md:col-span-3">
-                    <GradientHeaderH4 headline="Total traded" />
-                    <div className="text-white text-xl lg:text-2xl font-bold mt-1">
-                        {Number(totalCGTTraded).toLocaleString(
-                            'en-US',
-                            {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }
-                        )} CGT
-                    </div>
-                  </div>
-                    
-                  <div className="col-span-6 md:col-span-3">
-                    <GradientHeaderH4 headline="Biggest Trade" />
-                    <div className="text-white text-xl lg:text-2xl font-bold mt-1">
-                        {Number(biggestTrade).toLocaleString(
-                            'en-US',
-                            {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }
-                        )} CGT
-                    </div>
-                    <div className="flex flex-row">
-                      {/* <span className="text-blue-300/60 text-xs">7 hours ago</span> */}
-                    </div>
-                  </div>
-
-                  <div className="col-span-6 md:col-span-3">
-                    <GradientHeaderH4 headline="Smallest Trade" />
-                    <div className="text-white text-xl lg:text-2xl font-bold mt-1">
-                        {Number(smallestTrade).toLocaleString(
-                            'en-US',
-                            {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }
-                        )} CGT
-                    </div>
-                    {/* <div className="text-blue-300/60 text-xs">16 hours ago</div> */}
-                  </div>
+                {renderStatCard("24h trades", trades ? sortedTrades.length : null)}
+            {renderStatCard("Total traded", trades ? totalCGTTraded : null)}
+            {renderStatCard("Biggest Trade", trades ? biggestTrade : null)}
+            {renderStatCard("Smallest Trade", trades ? smallestTrade : null)}
 
                 </div>
             </div>
@@ -261,7 +223,7 @@ const TradesTable: React.FC<TradesTableProps> = ({ trades, marketPrices, liquidi
           </div>
           {/* sorting and stats end */}
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto custom-scrollbar">
             <div className="min-w-[1200px]">
 
               <div className="flex flex-col">

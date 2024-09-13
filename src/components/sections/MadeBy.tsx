@@ -20,9 +20,9 @@ const MadeBy = () => {
           <div className="text-xl md:text-xl lg:text-2xl text-white mb-5">
             Drop me a line and I will create the analysis for your next web3 project!
           </div>
-          <div>
+          {/* <div>
             <button className="w-fit px-7 md:px-14 py-1 md:py-2 text-lg tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-sm sm:order-2 sm:w-auto hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">Contact me!</button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

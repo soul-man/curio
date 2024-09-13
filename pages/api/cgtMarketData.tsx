@@ -55,8 +55,6 @@ export default async function handler(req: any, res: any) {
         fetchWithRetry(urlHistoricalDataCgt)
       ]);
 
-      // console.log( marketData);
-
       const cgtData = {
         marketPrice: marketData.market_data.current_price.usd.toFixed(4),
         volume: marketData.market_data.total_volume.usd,

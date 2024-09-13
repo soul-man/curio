@@ -1,8 +1,7 @@
-import React, {useState} from 'react';
-import dynamic from 'next/dynamic';
+import React, { useState, useEffect }  from 'react';
+import { Skeleton } from "@/components/ui/render-skeleton"
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { GradientHeaderH4 } from '@/components/ui/GradientHeaderH4';
-import CardLayout from '@/components/layout/common/CardLayout';
 import Spinner from '../Spinner';
 import { abbreviateNumber } from '../../utils/helpers';
 
@@ -30,13 +29,8 @@ interface TotalLocked {
 const TOTAL_SUPPLY = 100000000; // 100 million CGT
 
 const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, marketPrice }) => {
-  if (!loaded) {
-    return (
-      <div className="col-span-12 flex overflow-hidden relative flex-col p-8 text-2xl font-extralight text-black/90 dark:text-white rounded-2xl">
-        <Spinner />
-      </div>
-    );
-  }
+
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   const ethLocked = Number(liquidity?.ETH?.["CGT/WETH"]?.CGT || 0);
   const bscLocked = Number(liquidity?.BSC?.["CGT/WBNB"]?.CGT || 0);
@@ -53,14 +47,14 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
   const chainData = [
     { chain: 'ETH', amount: ethLocked, color: 'bg-blue-400', icon: './images/chains/ethereum.png' },
     { chain: 'BSC', amount: bscLocked, color: 'bg-yellow-400', icon: './images/chains/binance-chain.png' },
-    { chain: 'Curio Chain', amount: stakingLocked + curioPoolsLocked, color: 'bg-blue-300', icon: './images/chains/curio.png' },
+    { chain: 'CURIO CHAIN', amount: stakingLocked + curioPoolsLocked, color: 'bg-blue-300', icon: './images/chains/curio.png' },
     { chain: 'TON', amount: tonLocked, color: 'bg-cyan-500', icon: './images/chains/ton.png' },
     { chain: 'NEON', amount: neonLocked, color: 'bg-pink-500', icon: './images/chains/neon-evm.png' },
   ].sort((a, b) => b.amount - a.amount);
 
   const renderPoolInfo = (chain: string) => {
     const chainKey = chain === 'Curio Chain' ? 'CURIO' : chain as keyof typeof liquidity;
-    const chainLiquidity = liquidity[chainKey] || {};
+    const chainLiquidity = liquidity?.[chainKey] || {};
     return (
       <>
         {Object.entries(chainLiquidity).map(([poolName, poolData], index, arr) => (
@@ -79,26 +73,41 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
     );
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkeleton(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <>
-      <div className="relative col-span-12 md:col-span-6 p-5 border-t border-b md:border-t-transparent md:border-l md:border-b border-blue-500/10">
+      <div className="relative col-span-12 md:col-span-6 p-5 border-t border-b md:border-t-transparent md:border-b border-blue-500/10">
 
           <div className="flex flex-col items-start justify-start text-white">
             <GradientHeaderH4 headline="Total locked" />
             <div className="flex flew-row flex-wrap gap-3 md:gap-5 xl:gap-7 justify-between items-center mb-3 w-full">
-              <div className="text-2xl md:text-3xl font-bold text-white w-max">
-                {abbreviateNumber(totalLockedCGT)} <span className="font-extralight">CGT</span>
-              </div>
-              <div className="text-2xl md:text-3xl font-bold text-white w-max">
-                <span className="font-extralight">$ </span>{abbreviateNumber(totalLockedCGT * marketPrice)}
-              </div>
-              <div className={`text-sm md:text-md xl:text-lg bg-black/40 font-light px-2 py-0.5 rounded-md text-blue-300`}>
-                {lockedPercentage.toFixed(2)}%
-              </div>
+            {showSkeleton || totalLockedCGT === 0 ? (
+                <>
+                  <Skeleton className="h-8 w-32 bg-blue-950" />
+                  <Skeleton className="h-8 w-32 bg-blue-950" />
+                  <Skeleton className="h-6 w-20 bg-blue-950" />
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl md:text-3xl font-bold text-white w-max">
+                    {abbreviateNumber(totalLockedCGT)} <span className="font-extralight">CGT</span>
+                  </div>
+                  <div className="text-2xl md:text-3xl font-bold text-white w-max">
+                    <span className="font-extralight">$ </span>{abbreviateNumber(totalLockedCGT * marketPrice)}
+                  </div>
+                  <div className={`text-md md:text-lg bg-blue-600/30 font-light px-2 py-0.5 rounded-md text-blue-300`}>
+                    {lockedPercentage.toFixed(2)}%
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
-          <div className="mt-1 md:mt-5 w-full">
+          {/* <div className="mt-1 md:mt-5 w-full">
             <div className="flex rounded-md overflow-hidden">
             {[
                 { chain: 'ETH', amount: ethLocked, color: 'bg-blue-400', icon: './images/chains/ethereum.png' },
@@ -108,7 +117,7 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
                 { chain: 'Neon', amount: neonLocked, color: 'bg-pink-500', icon: './images/chains/neon-evm.png' },
               ].sort((a, b) => b.amount - a.amount).map(({ chain, amount, color, icon }) => {
                 const percentage = calculatePercentage(amount);
-                const minWidth = 20; // Minimum width in percentage
+                const minWidth = 10; // Minimum width in percentage
                 const width = Math.max(percentage, minWidth);
                 
                 return (
@@ -128,18 +137,16 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
                 );
               })}
             </div>
-          </div>
+          </div> */}
           
           <div className="mt-2 w-full">
             <div className="flex h-10 rounded-md relative w-full">
               {chainData.map(({ chain, amount, color }) => {
                 const percentage = calculatePercentage(amount);
-                const minWidth = 20;
-                const width = Math.max(percentage, minWidth);
                 const [isHovered, setIsHovered] = useState(false);
                 
                 return (
-                  <Popover key={chain} className="relative" style={{width: `${width}%`}}>
+                  <Popover key={chain} className="relative min-w-[14%] sm:min-w-[8%] md:min-w-[14%] lg:min-w-[10%] xl:min-w-[8%]" style={{width: `${percentage}%`}}>
                     <PopoverButton 
                       className="w-full h-full focus:outline-none"
                       onMouseEnter={() => setIsHovered(true)}
@@ -149,10 +156,24 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
                         className={`${color} h-full flex flex-col pl-2 justify-center text-xs relative group hover:brightness-110 transition-all duration-200`}
                       >
                         <span className="text-left whitespace-nowrap text-black/60 font-bold group-hover:relative">
-                          {chain}
+                          {showSkeleton || chain === undefined ? (
+                              <Skeleton className="h-2 w-10 bg-black/30" />
+                          ) : (
+                            <>
+                              {chain}
+                            </>
+                          )}
                         </span>
                         <span className="text-left whitespace-nowrap text-white font-light group-hover:relative">
-                          {percentage.toFixed(2)}%
+                          {showSkeleton || percentage === undefined ? (
+                            <>
+                              <Skeleton className="h-3 w-7 mt-0.5 bg-black/20" />
+                            </>
+                          ) : (
+                            <>
+                              {percentage.toFixed(2)}%
+                            </>
+                          )}
                         </span>
                       </div>
                     </PopoverButton>
@@ -194,10 +215,24 @@ const TotalLocked: React.FC<TotalLocked> = ({ loaded, liquidity, staking, market
             </div>
           </div>
 
-          <div className="text-xs mt-2 text-blue-100/70">
-            Move your mouse over the chains or icons for details
+          <div className="text-xs mt-2 text-blue-400/50 mb-5">
+            Move your mouse over the chains
           </div>
 
+          <div className="flex flex-row items-center gap-2 text-xs mt-2 text-blue-100/70">
+            <h4 className="text-md md:text-lg font-light text-blue-500 uppercase">
+                Available supply:
+            </h4>
+            <div className="text-md md:text-xl font-bold text-white w-max">
+              {showSkeleton || totalLockedCGT === undefined ? (
+                  <Skeleton className="h-5 w-24 bg-blue-950" />
+              ) : (
+                <>
+                {abbreviateNumber(100000000 - totalLockedCGT)} <span className="font-extralight">CGT</span>
+              </>
+              )}
+            </div>
+          </div>
       </div>
     </>
   );

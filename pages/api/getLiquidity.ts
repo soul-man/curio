@@ -195,7 +195,7 @@ async function getCurioPoolLiquidity(): Promise<{ [key: string]: { usdValue: str
 
         const bn0 = new BN(typeof amount0 === 'string' ? amount0.slice(2) : amount0, 16);
         const bn1 = new BN(typeof amount1 === 'string' ? amount1.slice(2) : amount1, 16);
-        
+
         const token0Amount = bn0.div(new BN(10).pow(new BN(poolInfo.token0.decimals)));
         const token1Amount = bn1.div(new BN(10).pow(new BN(poolInfo.token1.decimals)));
 
@@ -234,7 +234,6 @@ async function getNeonPoolLiquidity(web3: Web3, poolInfo: typeof poolsInfo.NEON[
     const poolContract = new web3.eth.Contract(erc20ABI, poolInfo.address);
 
     const reserves = await poolContract.methods.getReserves().call();
-    console.log("Reserves:", reserves);
 
     if (!reserves || typeof reserves !== 'object' || !('0' in reserves) || !('1' in reserves)) {
       throw new Error(`Unexpected reserves format: ${JSON.stringify(reserves)}`);
@@ -282,7 +281,9 @@ async function getNeonPoolLiquidity(web3: Web3, poolInfo: typeof poolsInfo.NEON[
 }
 
 async function getAllNetworksLiquidity() {
-  const web3Eth = new Web3(new Web3.providers.HttpProvider(addresses.providerEth));
+  const infuraProviderEth = `https://mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
+
+  const web3Eth = new Web3(new Web3.providers.HttpProvider(infuraProviderEth));
   const web3Bsc = new Web3(new Web3.providers.HttpProvider(addresses.providerBsc1));
   const tonClient = new TonClient({ endpoint: 'https://toncenter.com/api/v2/jsonRPC' });
   const web3Neon = new Web3(new Web3.providers.HttpProvider('https://neon-proxy-mainnet.solana.p2p.org'));

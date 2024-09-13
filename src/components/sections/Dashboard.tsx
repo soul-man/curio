@@ -6,6 +6,7 @@ import { FaBridgeCircleExclamation } from "react-icons/fa6";
 import { CiFileOn } from "react-icons/ci";
 import { CiCircleCheck } from "react-icons/ci";
 import { CgUnavailable } from "react-icons/cg";
+import { Skeleton } from "@/components/ui/render-skeleton"
 import CardLayout from '@/components/layout/common/CardLayout';
 import MarketPrice from '../cards/MarketPrice';
 import MarketCap from '../cards/MarketCap';
@@ -138,9 +139,8 @@ const Dashboard = () => {
     dedupingInterval: 900000 // 15 minutes
   })
 
-  const [supplyLoaded, setSupplyLoaded] = useState(true);
   const [marketDataLoaded, setMarketDataLoaded] = useState(true);
-
+  const [showSkeleton, setShowSkeleton] = useState(true);
 
   const formatDate = (date: string) => {
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
@@ -226,6 +226,11 @@ const Dashboard = () => {
     }
   }, [marketData]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkeleton(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
 
       <div id="dashboard" className="max-w-screen-2xl mx-auto mb-44">
@@ -236,13 +241,13 @@ const Dashboard = () => {
           <div className="col-span-12 md:col-span-6 p-5">
 
             <div className="h-full">
-              <div className='flex flex-col text-center md:text-left md:flex-col h-full'>
-                <h3 className="text-4xl sm:text-4xl md:text-4xl lg:text-6xl xl:text-6xl font-sans font-bold md:mb-2 text-white/90 uppercase"><span className="font-bold bg-gradient-to-r from-[#224eae] to-[#0f9ef2] inline-block text-transparent bg-clip-text">CGT Analytics</span></h3>
-                <p className="mb-5 text-md font-semibold md:text-xl lg:text-2xl text-white">
-                  Unparalleled Insights into CGT
+              <div className='flex flex-col justify-end items-center md:items-end h-full pr-5'>
+                <h3 className="text-4xl sm:text-4xl md:text-4xl lg:text-6xl xl:text-7xl font-sans font-bold md:mb-1 text-white/90 uppercase"><span className="font-bold bg-gradient-to-r from-[#224eae] to-[#0f9ef2] inline-block text-transparent bg-clip-text">CGT Analytics</span></h3>
+                <p className="mb-6 text-md font-normal md:text-xl lg:text-2xl text-white uppercase text-center md:text-right">
+                  Comprehensive insights at your fingertips
                 </p>
-                <p className="text-md md:text-xl font-extralight text-white mb-5">
-                  Your destination for CGT analytics! Experience financial transparency like never before.
+                <p className="text-md md:text-xl font-light text-blue-300 mb-5 text-center md:text-right">
+                  Welcome to your CGT analytics hub. Stay informed with key metrics and experience financial transparency like never before.
                 </p>
               </div>
             </div>
@@ -277,7 +282,14 @@ const Dashboard = () => {
                 <div className="col-span-6 flex flex-col w-full rounded-md">
                   <GradientHeaderH4 headline="Circ. Supply" />
                   <div className="text-xl md:text-3xl text-white font-medium">
-                    {abbreviateNumber(100000000)}
+                    {showSkeleton ? (
+                      <Skeleton className="bg-blue-700/30 mt-1 h-7 w-24" />
+                    ) : (
+                      <div>
+                        <span className="font-extralight">$</span>{" "}
+                        {abbreviateNumber(100000000)}             
+                      </div>
+                    )} 
                   </div>
                 </div>
                 {/* Total supply end */}
@@ -286,7 +298,14 @@ const Dashboard = () => {
                 <div className="col-span-6 flex flex-col items-end w-full rounded-md">
                   <GradientHeaderH4 headline="Max. Supply" />
                   <div className="text-xl md:text-3xl font-medium text-white">
-                    {abbreviateNumber(100000000)}
+                    {showSkeleton ? (
+                      <Skeleton className="bg-blue-700/30 mt-1 h-7 w-24" />
+                    ) : (
+                      <div>
+                        <span className="font-extralight">$</span>{" "}
+                        {abbreviateNumber(100000000)}             
+                      </div>
+                    )} 
                   </div>
                 </div>
                 {/* Total supply end */}
@@ -330,21 +349,37 @@ const Dashboard = () => {
                   </div>
 
                   <div className="mt-0 md:mt-0 flex flex-row lg:flex-row justify-between lg:gap-1 font-thin text-sm lg:text-md rounded-b-md text-left lg:text-left text-blue-300/90">
-                    <span>{Number(staking).toLocaleString('en-US')} CGT</span>
-                    <span>
-                      ${Number(staking * marketData.marketPrice).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })}
-                    </span>
-                    <span>
-                      {Number(staking / supply.cgtSupplyOnKusama * 100).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                      })}%
-                    </span>
-                  </div>
+                    {showSkeleton || staking === undefined ? (
+                      <Skeleton className="bg-blue-700/30 h-4 w-26" />
+                    ) : (
+                        <span>
+                          {Number(staking).toLocaleString('en-US')} CGT
+                        </span>
+                    )} 
 
+                    {showSkeleton || staking === undefined ? (
+                      <Skeleton className="bg-blue-700/30 h-4 w-24" />
+                    ) : (
+                        <span>
+                          ${Number(staking * marketData.marketPrice).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}
+                        </span>
+                    )} 
+
+                    {showSkeleton || staking === undefined ? (
+                      <Skeleton className="bg-blue-700/30 h-4 w-12" />
+                    ) : (
+                        <span>
+                          {Number(staking / supply.cgtSupplyOnKusama * 100).toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                          })}%
+                        </span>
+                    )} 
+
+                  </div>
                 </div>
               </div>
           </div>
@@ -355,7 +390,7 @@ const Dashboard = () => {
           <Atl loaded={marketDataLoaded} ath={marketData.ath} athTime={formatDate(marketData.athTime)} athChange={marketData.athChange} atl={marketData.atl} atlTime={formatDate(marketData.atlTime)} atlChange={marketData.atlChange} />
 
           {/* ALH break */}
-          <div className="col-span-12 md:col-span-4 px-5 py-5 border-b border-t md:border-t-transparent md:border-r border-blue-500/10">
+          <div className="col-span-12 md:col-span-4 px-5 py-5 border-b border-t md:border-t-transparent border-blue-500/10">
               <div className="flex flex-row justify-center md:justify-between items-center">
                 <div className="flex flex-col justify-center text-white w-full">
                   <GradientHeaderH4 headline="When new ATH?" />  

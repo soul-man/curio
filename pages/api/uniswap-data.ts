@@ -239,7 +239,7 @@ async function getTradesForChain(web3: Web3, poolAddress: string, chain: 'ETH' |
     throw error;
   }
 
-  const blocksFor24Hours = chain === 'ETH' ? BigInt(6646) : BigInt(2000);
+  const blocksFor24Hours = chain === 'ETH' ? BigInt(8646) : BigInt(2000);
   const fromBlock = latestBlock - blocksFor24Hours > 0n ? latestBlock - blocksFor24Hours : 0n;
   console.log(`Fetching events from block ${fromBlock.toString()} to ${latestBlock.toString()} on ${chain}`);
 
@@ -320,54 +320,11 @@ async function getTradesForChain(web3: Web3, poolAddress: string, chain: 'ETH' |
   }));
   return trades;
 }
-
-async function getPoolLiquidity(web3: Web3, poolAddress: string, chain: 'ETH' | 'BSC'): Promise<{ usdValue: string, token0: string, token1: string }> {
-  try {
-    const token0Address = chain === 'ETH' ? addresses.WETH_ETH_ADDRESS : addresses.WBNB_BNB_ADDRESS;
-    const token1Address = chain === 'ETH' ? addresses.CGT_ETH_ADDRESS : addresses.CGT_BNB_ADDRESS;
-
-    // ERC20 ABI for balanceOf function
-    const erc20ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}] as const;
-    
-    const token0Contract = new web3.eth.Contract(erc20ABI, token0Address);
-    const token1Contract = new web3.eth.Contract(erc20ABI, token1Address);
-    
-    // Get the balances of both tokens in the pool
-    const [token0Balance, token1Balance] = await Promise.all([
-      token0Contract.methods.balanceOf(poolAddress).call(),
-      token1Contract.methods.balanceOf(poolAddress).call()
-    ]);
-    
-    // Convert balances to ether units
-    const token0Amount = web3.utils.fromWei(token0Balance.toString(), 'ether');
-    const token1Amount = web3.utils.fromWei(token1Balance.toString(), 'ether');
-    
-    // Get current market prices
-    const prices = await getPrices();
-    const marketPrice = chain === 'ETH' ? prices.eth : prices.bnb;
-    
-    // Calculate USD value
-    const token0UsdValue = parseFloat(token0Amount) * marketPrice;
-    const token1UsdValue = parseFloat(token1Amount) * prices.cgt;
-    const totalUsdValue = (token0UsdValue + token1UsdValue).toFixed(2);
-
-    return {
-      usdValue: totalUsdValue,
-      token0: parseFloat(token0Amount).toFixed(2),
-      token1: parseFloat(token1Amount).toFixed(0)
-    };
-  } catch (error) {
-    console.error(`Error fetching liquidity for ${chain}:`, error);
-    return { usdValue: '0', token0: '0', token1: '0' };
-  }
-}
   
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log('API handler started');
-
   const cachedData = cache.get('trades');
   if (cachedData) {
     console.log('Returning cached data');
@@ -375,36 +332,36 @@ export default async function handler(
   }
   
   try {
-    console.log('Initializing Web3 instances');
-    const infuraProviderBsc = `https://bsc-mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
+    // const infuraProviderBsc = `https://bsc-mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
+    const infuraProviderEth = `https://bsc-mainnet.infura.io/v3/${process.env.NEXT_INFURA_API_KEY}`;
     const web3Eth = new Web3(new Web3.providers.HttpProvider(addresses.providerEth));
-    const web3Bsc = new Web3(new Web3.providers.HttpProvider(infuraProviderBsc));
+    // const web3Bsc = new Web3(new Web3.providers.HttpProvider(infuraProviderBsc));
 
     console.log('Fetching ETH trades');
     const ethTrades = await getTradesForChain(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
     console.log(`Fetched ${ethTrades.length} ETH trades`);
 
-    console.log('Fetching ETH liquidity');
-    const ethLiquidity = await getPoolLiquidity(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
-    console.log('Fetching BSC liquidity');
-    const bscLiquidity = await getPoolLiquidity(web3Bsc, addresses.POOL_BSC_CGT_BNB, 'BSC');
+    // console.log('Fetching ETH liquidity');
+    // const ethLiquidity = await getPoolLiquidity(web3Eth, addresses.POOL_ETH_CGT_ETH, 'ETH');
+    // console.log('Fetching BSC liquidity');
+    // const bscLiquidity = await getPoolLiquidity(web3Bsc, addresses.POOL_BSC_CGT_BNB, 'BSC');
     
     const allTrades = [...ethTrades].sort((a, b) => b.timestamp - a.timestamp);
     
     const result = {
       trades: allTrades,
-      liquidity: {
-        ETH: {
-          usdValue: ethLiquidity.usdValue,
-          WETH: ethLiquidity.token0,
-          CGT: ethLiquidity.token1
-        },
-        BSC: {
-          usdValue: bscLiquidity.usdValue,
-          WBNB: bscLiquidity.token0,
-          CGT: bscLiquidity.token1
-        }
-      }
+      // liquidity: {
+      //   ETH: {
+      //     usdValue: ethLiquidity.usdValue,
+      //     WETH: ethLiquidity.token0,
+      //     CGT: ethLiquidity.token1
+      //   },
+      //   BSC: {
+      //     usdValue: bscLiquidity.usdValue,
+      //     WBNB: bscLiquidity.token0,
+      //     CGT: bscLiquidity.token1
+      //   }
+      // }
     };
 
     console.log('Caching result');

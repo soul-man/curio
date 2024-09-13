@@ -1,16 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { GradientHeaderH4 } from '@/components/ui/GradientHeaderH4';
-import Spinner from '../Spinner';
+import { Skeleton } from "@/components/ui/render-skeleton";
 import { abbreviateNumber } from '../../utils/helpers';
 
 const Volume = (props: any) => {
-  if (!props.loaded) {
-    return (
-      <div className="col-span-12 flex overflow-hidden relative flex-col p-8 text-2xl font-extralight text-black/90 dark:text-white rounded-2xl">
-        <Spinner />
-      </div>
-    );
-  }
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkeleton(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
@@ -18,8 +17,14 @@ const Volume = (props: any) => {
         <GradientHeaderH4 headline="Volume 24h" />
 
         <div className="text-2xl md:text-3xl font-bold text-white">
-          <span className="font-extralight">$</span>{" "}
-          {abbreviateNumber(props.volume)}
+          {showSkeleton || Number(props.volume) === undefined ? (
+              <Skeleton className="bg-blue-700/30 mt-1 h-7 w-24" />
+            ) : (
+              <div>
+                <span className="font-extralight">$</span>{" "}
+                {abbreviateNumber(props.volume)}             
+              </div>
+            )} 
         </div>
       </div>
     </>

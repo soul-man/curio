@@ -3,8 +3,9 @@ import Layout from '@/components/layout/Layout';
 import Header from '@/components/layout/Header';
 import Intro from '@/components/sections/Intro';
 import Dashboard from '@/components/sections/Dashboard';
-import DexTrades from '@/components/sections/DexTrades';
+// import DexTrades from '@/components/sections/DexTrades';
 import Pools from '@/components/sections/Pools';
+import Store from '@/components/sections/Store';
 import MadeBy from '@/components/sections/MadeBy';
 
 export default function CurioDao() {
@@ -14,7 +15,8 @@ export default function CurioDao() {
       <Intro />
       <Dashboard />
       <Pools />
-      <DexTrades />
+      {/* <DexTrades /> */}
+      <Store />
       <MadeBy />
     </Layout>
   );

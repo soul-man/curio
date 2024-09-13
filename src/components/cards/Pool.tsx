@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CardLayout from '@/components/layout/common/CardLayout';
+import { Skeleton } from "@/components/ui/render-skeleton";
 
 interface PoolData {
   name: string;
@@ -20,6 +21,13 @@ interface PoolData {
 }
 
 const PoolCard: React.FC<{ pool: PoolData }> = ({ pool }) => {
+  const [showSkeleton, setShowSkeleton] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkeleton(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="col-span-12 sm:col-span-4 md:col-span-4 lg:col-span-3">
       <CardLayout gradientStart={pool.gradientStart} gradientEnd={pool.gradientEnd} padding="p-0">
@@ -45,17 +53,36 @@ const PoolCard: React.FC<{ pool: PoolData }> = ({ pool }) => {
                 {pool.name}
               </div>
               <div className="text-md md:text-lg text-white font-light text-center lg:text-left">
-                ${Number(pool.usdValue).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}              
+                {showSkeleton || Number(pool.usdValue) === undefined ? (
+                  <Skeleton className="h-6 w-24 bg-blue-700/30 pt-1" />
+                ) : (
+                  `$${Number(pool.usdValue).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
+                )}          
               </div>
             </div>
           </div>
 
-          <div className="text-center w-full font-light text-sm text-blue-300/90  pt-1 my-3">
-            {Number(pool.token0Amount).toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0})} <span className="mr-5 px-1 py-0.5 bg-blue-900/40 rounded-sm">{pool.token0Symbol}</span>
-            {Number(pool.token1Amount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} <span className="px-1 py-0.5 bg-blue-900/40 rounded-sm">{pool.token1Symbol}</span>
+          <div className="flex flex-row justify-around text-center w-full font-light text-sm text-blue-200/90  pt-1 my-3">
+            {showSkeleton || Number(pool.token0Amount) === undefined ? (
+              <Skeleton className="bg-blue-700/30 h-5 w-24" />
+            ) : (
+              <div>
+                {Number(pool.token0Amount).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})} 
+                  <span className={`ml-2 px-1 py-0.5 ${pool.bgColor} bg-opacity-30 rounded-sm`}>{pool.token0Symbol}</span>
+              </div>
+            )}  
+
+            {showSkeleton || Number(pool.token1Amount) === undefined ? (
+              <Skeleton className="bg-blue-700/30 h-5 w-24" />
+            ) : (
+              <div>
+                {Number(pool.token1Amount).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})} 
+                <span className={`ml-2 px-1 py-0.5 ${pool.bgColor} bg-opacity-30 rounded-sm`}>{pool.token1Symbol}</span>
+              </div>
+            )} 
           </div>
 
-          <div className={`${pool.bgColor} text-sm w-full py-1 text-center text-white/90`}>
+          <div className={`${pool.bgColor} text-sm font-normal w-full py-1 text-center text-black/90`}>
             {pool.chain}
           </div>
 

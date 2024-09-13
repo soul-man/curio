@@ -107,7 +107,7 @@ export const chartOptionsDark: ApexOptions = {
         curve: 'smooth',
         lineCap: 'butt',
         colors: ['#FFFFFF'],
-        width: 1,
+        width: 0,
         dashArray: 0,
     },
     xaxis: {
@@ -122,7 +122,7 @@ export const chartOptionsDark: ApexOptions = {
             enabled: false,
         },
         labels: {
-            show: true,
+            show: false,
             hideOverlappingLabels: false,
             offsetY: 28,
             rotate: 360,
@@ -133,11 +133,15 @@ export const chartOptionsDark: ApexOptions = {
                 fontWeight: 300,
                 cssClass: 'apexcharts-xaxis-label',
             },
-            formatter: function (val: any) {
-                var today = new Date(val);
-                return today.toLocaleDateString("en-US", { month: 'short', day: 'numeric' })
-            },
+            formatter: function (val: any, timestamp: number) {
+                const date = new Date(timestamp);
+                return date.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
+              },
         },
+        tickPlacement: 'on',
+        tickAmount: undefined,
+        min: undefined,
+        max: undefined,
     },
     yaxis: {
         axisBorder: {
