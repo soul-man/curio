@@ -19,11 +19,33 @@
  
 ## Run the development server
 
-Install and start the server using this commands:
+###Install:
 
 ```bash
 yarn install
 ```
+
+### Setting Up Environment Variables:
+
+To configure your Next.js application with the necessary environment variables, follow these steps:
+
+1. **Create a `.env.local` file** in the root of your project if it doesn't already exist.
+
+2. **Add the following environment variables** to the `.env.local` file:
+
+   ```plaintext
+   NEXT_INFURA_API_KEY=your_infura_api_key_here
+   NEXT_MORALIS_API_KEY=your_moralis_api_key_here
+   NEXT_HOST_BASE_URL=your_host_base_url_here
+   NEXT_TWITTER_BEARER_TOKEN=your_twitter_bearer_token_here
+   NEXT_TONCENTER_RPC_API_KEY=your_toncenter_rpc_api_key_here
+   ```
+
+3. **Replace the placeholder values** with your actual API keys and URLs.
+
+These environment variables will be accessible in your application via `process.env`, allowing you to securely use sensitive information without hardcoding it into your source code.
+
+###Start the server using this command:
 
 ```bash
 yarn dev
