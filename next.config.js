@@ -14,6 +14,7 @@ const nextConfig = {
     NEXT_MORALIS_API_KEY: process.env.NEXT_MORALIS_API_KEY,
     NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,
     NEXT_TWITTER_BEARER_TOKEN: process.env.NEXT_TWITTER_BEARER_TOKEN,
+    NEXT_TONCENTER_RPC_API_KEY: process.env.NEXT_TONCENTER_RPC_API_KEY
   },
 
   reactStrictMode: true,
