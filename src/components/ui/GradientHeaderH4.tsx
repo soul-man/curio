@@ -5,7 +5,7 @@ interface GradientHeaderProps {
 }
 
 export const GradientHeaderH4: React.FC<GradientHeaderProps> = ({ headline }) => (
-    <h4 className="text-md md:text-lg text-white/90 uppercase">
+    <h4 className="text-md md:text-lg lg:text-xl text-white/90 uppercase">
       <span className="font-light text-blue-500">
         {headline}
       </span>

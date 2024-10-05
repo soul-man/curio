@@ -163,7 +163,7 @@ async function getTonPoolLiquidity(client: TonClient, poolInfo: typeof poolsInfo
 async function getCurioPoolLiquidity(): Promise<{ [key: string]: { usdValue: string, [key: string]: string } }> {
   let api: ApiPromise | null = null;
   try {
-    const provider = new WsProvider('wss://parachain.curioinvest.com');
+    const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
     api = await ApiPromise.create({ provider });
 
     const prices = await getPrices();

@@ -57,9 +57,15 @@ export default async function handler(req: any, res: any) {
 
       const cgtData = {
         marketPrice: marketData.market_data.current_price.usd.toFixed(4),
+        marketPriceHigh_24h: marketData.market_data.high_24h.usd.toFixed(4),
+        marketPriceLow_24h: marketData.market_data.low_24h.usd.toFixed(4),
         volume: marketData.market_data.total_volume.usd,
         marketCap: marketData.market_data.market_cap.usd,
-        priceChange: marketData.market_data.price_change_percentage_24h.toFixed(2),
+        priceChange_24h: marketData.market_data.price_change_percentage_24h.toFixed(2),
+        priceChange_7d: marketData.market_data.price_change_percentage_7d.toFixed(2),
+        priceChange_14d: marketData.market_data.price_change_percentage_14d.toFixed(2),
+        priceChange_30d: marketData.market_data.price_change_percentage_30d.toFixed(2),
+        priceChange_60d: marketData.market_data.price_change_percentage_60d.toFixed(2),
         ath: marketData.market_data.ath.usd.toFixed(4),
         athTime: formatDate(marketData.market_data.ath_date.usd),
         athChange: marketData.market_data.ath_change_percentage.usd.toFixed(2),

@@ -10,22 +10,20 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   env: {
+    NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,
+    NEXT_CURIO_PROVIDER: process.env.NEXT_CURIO_PROVIDER,
     NEXT_INFURA_API_KEY: process.env.NEXT_INFURA_API_KEY,
     NEXT_MORALIS_API_KEY: process.env.NEXT_MORALIS_API_KEY,
-    NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,
-    NEXT_TWITTER_BEARER_TOKEN: process.env.NEXT_TWITTER_BEARER_TOKEN,
+    NEXT_TONCENTER_RPC_API_KEY: process.env.NEXT_TONCENTER_RPC_API_KEY,
   },
-
   reactStrictMode: true,
   swcMinify: true,
-
   // Uncoment to add domain whitelist
   // images: {
   //   domains: [
   //     'res.cloudinary.com',
   //   ],
   // },
-
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule) =>

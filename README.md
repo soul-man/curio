@@ -15,6 +15,7 @@
 - Staking Analytics: Users can view CGT staking statistics on the Curio Chain, including APY, total staked amount, and percentage of supply staked.
 - Trade Data: The platform provides recent trade data, including trade sizes, price impacts, and transaction details.
 - Historical Performance: Users can see all-time high and all-time low prices for CGT, along with the dates these milestones were achieved.
+- Curio Wallet Integration: Users can connect their Curio wallet to view detailed wallet information, including transferable balance, total balance, total staked amount, staking percentage, and pending rewards.
 
  
 ## Run the development server

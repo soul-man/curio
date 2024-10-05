@@ -12,7 +12,7 @@ export const chartOptionsDark: ApexOptions = {
         }
     },
     
-    colors: [ '#1092EF'], // Start color (blue)
+    colors: [ '#92C5FD'], // Start color (blue)
     fill: {
         // colors: ['#2463EB'],
         // opacity: 0.9,
@@ -72,7 +72,7 @@ export const chartOptionsDark: ApexOptions = {
     },
     grid: {
         show: true,
-        borderColor: '#333B5C',
+        borderColor: '#23273D',
         strokeDashArray: 5,
         position: 'back',
         xaxis: {
@@ -117,6 +117,7 @@ export const chartOptionsDark: ApexOptions = {
         axisTicks: {
             show: true,
             offsetY: 13,
+            color: '#5666A1',
         },
         tooltip: {
             enabled: false,
