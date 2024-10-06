@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
 const BuyCGT: React.FC = () => {
@@ -20,7 +21,7 @@ const BuyCGT: React.FC = () => {
               whileHover={{ scale: 1.2, rotate: 10 }}
               whileTap={{ scale: 0.9 }}
             >
-              <img src="./images/dex/uniswap.png" className="w-8 lg:w-9" alt="Uniswap" />
+              <Image src="/images/dex/uniswap.png" width="25" height="25" className="w-8 lg:w-9" alt="Uniswap" />
             </motion.a>
             <motion.a 
               href="https://pancakeswap.finance/swap?outputCurrency=0x61632b49Df5CA20846b3220bFc42BDa5E32C81ad" 
@@ -28,7 +29,7 @@ const BuyCGT: React.FC = () => {
               whileHover={{ scale: 1.2, rotate: 10 }}
               whileTap={{ scale: 0.9 }}
             >
-              <img src="./images/dex/pancakeswap.png" className="w-8 lg:w-9" alt="PancakeSwap" />
+              <Image src="/images/dex/pancakeswap.png" width="25" height="25" className="w-8 lg:w-9" alt="PancakeSwap" />
             </motion.a>
           </div>
         </motion.div>

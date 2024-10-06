@@ -7,7 +7,7 @@ const nextConfig = {
   },
   eslint: {
     dirs: ['src'],
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   env: {
     NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,

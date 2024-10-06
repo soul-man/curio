@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 import dynamic from 'next/dynamic';
 // import PolkadotLogin from '../wallet/PolkadotLogin';
 const PolkadotLogin = dynamic(() => import('../wallet/Wallet'), { ssr: false });
@@ -16,7 +17,7 @@ export default function Header() {
         <div className="flex justify-between items-center pt-4 pb-1">
           {/* Logo */}
           <div className="flex flex-row items-center gap-3">
-            <img src="/images/logo.png" alt="Curio Insights Logo" width={40} height={40} />
+            <Image src="/images/logo.png" alt="Curio Insights Logo" width="40" height="40" />
             <a href="./" className="text-xl md:text-3xl font-bold font-chakra text-white">
               CURIO INSIGHTS
             </a>

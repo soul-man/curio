@@ -139,79 +139,78 @@ const TotalLocked: React.FC<TotalLocked> = ({ liquidity, staking, marketPrice })
   
       <motion.div variants={itemVariants} className="w-full">
         <div className="flex h-10 rounded-md relative w-full">
-          {chainData.map(({ chain, amount, color }, index) => {
-            const percentage = calculatePercentage(amount);
-            const [isHovered, setIsHovered] = useState(false);
-            
-            return (
-              <Popover key={chain} className="relative min-w-[14%] sm:min-w-[8%] md:min-w-[14%] lg:min-w-[10%] xl:min-w-[8%]" style={{width: `${percentage}%`}}>
-                <PopoverButton 
-                  className="w-full h-full focus:outline-none"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  <div 
-                    className={`${color} h-full flex flex-col pl-2 justify-center text-xs relative group hover:brightness-110 transition-all duration-200`}
-                  >
-                    <span className="text-left whitespace-nowrap text-black/60 font-bold group-hover:relative">
-                      {showSkeleton || chain === undefined ? (
-                        <Skeleton className="h-2 w-10 bg-black/30" />
-                      ) : (
-                        <>
-                          {chain}
-                        </>
-                      )}
-                    </span>
-                    <span className="text-left whitespace-nowrap text-white font-light group-hover:relative">
-                      {showSkeleton || percentage === undefined ? (
-                        <>
-                          <Skeleton className="h-3 w-7 mt-0.5 bg-black/20" />
-                        </>
-                      ) : (
-                        <>
-                          {percentage.toFixed(2)}%
-                        </>
-                      )}
-                    </span>
-                  </div>
-                </PopoverButton>
-  
-                {isHovered && (
-                  <PopoverPanel 
-                    static
-                    className={`absolute z-40 w-64 transform ${
-                      index >= chainData.length / 2 ? '-translate-x-full left-full' : '-translate-x-1/2 left-1/2'
-                    } bottom-full mb-2`}
+        {chainData.map(({ chain, amount, color }, index) => {
+          const percentage = calculatePercentage(amount);
+          
+          return (
+            <Popover key={chain} className="relative min-w-[14%] sm:min-w-[8%] md:min-w-[14%] lg:min-w-[10%] xl:min-w-[8%]" style={{width: `${percentage}%`}}>
+              {({ open }) => (
+                <>
+                  <PopoverButton 
+                    className="w-full h-full focus:outline-none"
                   >
                     <div 
-                      className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
+                      className={`${color} h-full flex flex-col pl-2 justify-center text-xs relative group hover:brightness-110 transition-all duration-200`}
                     >
-                      <div className="relative bg-white p-3">
-                        <p className="text-sm font-medium text-gray-900 mb-2">
-                          {chain}
-                        </p>
-                        {renderPoolInfo(chain)}
-                        <p className="text-sm text-gray-700 flex justify-between font-medium">
-                          <span>Locked:</span>
-                          <span>{amount.toLocaleString()} CGT</span>
-                        </p>
-                        <p className="text-xs text-gray-500 flex justify-between mt-1">
-                          <span>Total locked:</span>
-                          <span>{percentage.toFixed(2)}%</span>
-                        </p>
-                        <p className="text-xs text-gray-500 flex justify-between mt-1">
-                          <span>Total supply:</span>
-                          <span>{((amount / TOTAL_SUPPLY) * 100).toFixed(2)}%</span>
-                        </p>
-                      </div>
+                      <span className="text-left whitespace-nowrap text-black/60 font-bold group-hover:relative">
+                        {showSkeleton || chain === undefined ? (
+                          <Skeleton className="h-2 w-10 bg-black/30" />
+                        ) : (
+                          <>
+                            {chain}
+                          </>
+                        )}
+                      </span>
+                      <span className="text-left whitespace-nowrap text-white font-light group-hover:relative">
+                        {showSkeleton || percentage === undefined ? (
+                          <>
+                            <Skeleton className="h-3 w-7 mt-0.5 bg-black/20" />
+                          </>
+                        ) : (
+                          <>
+                            {percentage.toFixed(2)}%
+                          </>
+                        )}
+                      </span>
                     </div>
-                  </PopoverPanel>
-                )}
-              </Popover>
-            );
-          })}
+                  </PopoverButton>
+
+                  {open && (
+                    <PopoverPanel 
+                      static
+                      className={`absolute z-40 w-64 transform ${
+                        index >= chainData.length / 2 ? '-translate-x-full left-full' : '-translate-x-1/2 left-1/2'
+                      } bottom-full mb-2`}
+                    >
+                      <div 
+                        className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5"
+                      >
+                        <div className="relative bg-white p-3">
+                          <p className="text-sm font-medium text-gray-900 mb-2">
+                            {chain}
+                          </p>
+                          {renderPoolInfo(chain)}
+                          <p className="text-sm text-gray-700 flex justify-between font-medium">
+                            <span>Locked:</span>
+                            <span>{amount.toLocaleString()} CGT</span>
+                          </p>
+                          <p className="text-xs text-gray-500 flex justify-between mt-1">
+                            <span>Total locked:</span>
+                            <span>{percentage.toFixed(2)}%</span>
+                          </p>
+                          <p className="text-xs text-gray-500 flex justify-between mt-1">
+                            <span>Total supply:</span>
+                            <span>{((amount / TOTAL_SUPPLY) * 100).toFixed(2)}%</span>
+                          </p>
+                        </div>
+                      </div>
+                    </PopoverPanel>
+                  )}
+                </>
+              )}
+            </Popover>
+          );
+        })}
         </div>
       </motion.div>
   

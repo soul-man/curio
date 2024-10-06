@@ -101,7 +101,7 @@ const Pools = () => {
             variants={containerVariants}
           >
             {poolsData.map((pool, index) => (
-              <PoolCard pool={pool} index={index} />
+              <PoolCard key={`pool-${index}`} pool={pool} index={index} />
             ))}
           </motion.div>
         </motion.div>

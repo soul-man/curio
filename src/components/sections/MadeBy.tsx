@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 const MadeBy = () => {
 
@@ -8,7 +9,7 @@ const MadeBy = () => {
       <div className="flex flex-col md:flex-row gap-3 md:gap-20 justify-center text-center px-10 mx-auto w-11/12 md:w-full lg:w-10/12">
         {/* Logo */}
         <div className="flex flex-row md:flex-row gap-5 mb-1 w-full">
-          <img src="/images/logo.png" alt="Curio Insights Logo" className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"/>
+          <Image src="/images/logo.png" alt="Curio Insights Logo" width="60" height="60" className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24"/>
           <a href="./" className="text-3xl md:text-4xl lg:text-5xl font-bold font-chakra text-white text-left">
             CURIO<br /> INSIGHTS
           </a>

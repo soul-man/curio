@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import useSWR from 'swr';
 import { Skeleton } from "@/components/ui/render-skeleton";
@@ -279,7 +280,7 @@ const Intro = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <img src="./images/dex/uniswap.png" className="w-8 lg:w-9" />
+                    <Image src="/images/dex/uniswap.png" width="8" height="8" alt="Uniswap DEX" className="w-8 lg:w-9" />
                   </motion.a>
                   <motion.a 
                     href="https://pancakeswap.finance/swap?outputCurrency=0x61632b49Df5CA20846b3220bFc42BDa5E32C81ad" 
@@ -287,7 +288,7 @@ const Intro = () => {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                   >
-                    <img src="./images/dex/pancakeswap.png" className="w-8 lg:w-9" />
+                    <Image src="/images/dex/pancakeswap.png" width="8" height="8" alt="Pancakeswap DEX" className="w-8 lg:w-9" />
                   </motion.a>
                 </div>
               </div>

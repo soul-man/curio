@@ -58,7 +58,7 @@ const TopPools: React.FC<TopPoolsProps> = ({ liquidity }) => {
     className="col-span-12 lg:col-span-6 p-2 md:p-5 md:border-l border-blue-500/10 align-baseline h-full">
       <motion.div variants={itemVariants} className="grid grid-cols-12 lg:grid-cols-6 gap-2 lg:gab-5">
         {topTwoPools.map((pool, index) => (
-          <PoolCard index={index} pool={pool} />
+          <PoolCard key={index} index={index} pool={pool} />
         ))}
       </motion.div>
     </motion.div>

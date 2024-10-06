@@ -22,7 +22,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-700/20",
             gradientEnd: "to-blue-900/20",
             dex: "Uniswap",
-            dexIcon: "images/dex/uniswap.png"
+            dexIcon: "/images/dex/uniswap.png"
         },
         {
             name: "CGT/WBNB",
@@ -38,7 +38,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-yellow-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Pancakeswap",
-            dexIcon: "images/dex/pancakeswap.png"
+            dexIcon: "/images/dex/pancakeswap.png"
         },
         {
             name: "CGT/USD₮",
@@ -54,7 +54,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-cyan-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
         {
             name: "CGT/TON",
@@ -70,7 +70,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-cyan-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
         {
             name: "CGT/USDC",
@@ -86,7 +86,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
         {
             name: "CGT/DAI",
@@ -102,7 +102,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
         {
             name: "CGT/USDC",
@@ -118,7 +118,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-pink-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
         {
             name: "CGT/JSOL",
@@ -134,7 +134,7 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-pink-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png"
         },
     ];
 };

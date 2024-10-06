@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import CardLayout from '@/components/layout/common/CardLayout';
 import { motion, useInView } from 'framer-motion';
 
@@ -73,14 +74,14 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, index }) => {
                 {pool.dex}
               </span>
             </a>
-            <img src={pool.dexIcon} className="w-5 h-5" alt={pool.dex} />
+            <Image src={pool.dexIcon} width="20" height="20" className="w-5 h-5" alt={pool.dex} />
           </div>
 
           <div className="flex flex-col md:flex-row lg:flex-row md:w-full rounded-md justify-center gap-2 md:gap-4">
             <div className="flex flex-col relative justify-center items-center">
               <div className="flex flex-row mb-0 lg:mb-0 -space-x-2 relative justify-center items-center">
-                <img src="/images/tokens/cgt.png" alt="CGT" className="w-8 h-8 md:w-10 md:h-10 lg:mr-0" />
-                <img src={pool.icon} alt={pool.chain} className="bg-white rounded-full p-[1px] w-8 h-8 md:w-10 md:h-10"/>
+                <Image src="/images/tokens/cgt.png" alt="CGT" width="25" height="25" className="w-8 h-8 md:w-10 md:h-10 lg:mr-0" />
+                <Image src={pool.icon} alt={pool.chain} width="25" height="25" className="bg-white rounded-full p-[1px] w-8 h-8 md:w-10 md:h-10"/>
               </div>
             </div>
             <div>
