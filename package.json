@@ -38,7 +38,6 @@
     "apexcharts": "^3.49.1",
     "axios": "^0.21.4",
     "axios-cache-adapter": "^2.7.3",
-    "capital-dex-parachain-sdk": "https://github.com/CurioTeam/capital-dex-parachain-sdk.git",
     "clsx": "^2.1.1",
     "coinmarketcap-api": "^3.1.1",
     "ethers": "5.7.2",
