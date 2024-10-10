@@ -40,17 +40,20 @@ export const chartOptionsDark: ApexOptions = {
             dataPointIndex: number;
             w: any;
           }) {
-            var today = new Date(w.globals.labels[dataPointIndex]);
+            const timestamp = w.globals.seriesX[seriesIndex][dataPointIndex];
+            const date = new Date(timestamp);
+            const price = series[seriesIndex][dataPointIndex];
+            
             return (
-                '<div class="px-2 py-1 bg-white text-black font-light">' +
-                "<span>" +
-                today.toLocaleDateString("en-US", { month: 'short', day: 'numeric' }) + ", " + today.getFullYear() +
-                "<br />$" +
-                series[seriesIndex][dataPointIndex].toFixed(4) +
-                "</span>" +
-                "</div>"
+              '<div class="px-2 py-1 bg-white text-black font-light">' +
+              "<span>" +
+              date.toLocaleDateString("en-US", { month: 'short', day: 'numeric', year: 'numeric' }) +
+              "<br />$" +
+              price.toFixed(4) +
+              "</span>" +
+              "</div>"
             );
-        },
+          },
         fillSeriesColor: true,
         // theme: true,
         style: {
