@@ -4,45 +4,50 @@ import NodeCache from 'node-cache';
 import { BN } from '@polkadot/util';
 
 const DECIMALS = 18;
+const CACHE_KEY = 'totalStaked';
+const CACHE_TTL = 900; // 15 minutes
 
-// Create a cache with a 15-minute (900 seconds) expiration
-const cache = new NodeCache({ stdTTL: 900 });
+const cache = new NodeCache({ stdTTL: CACHE_TTL });
 
 function formatBalance(balance: BN, decimals: number): number {
   return parseFloat(balance.toString()) / Math.pow(10, decimals);
 }
 
+async function getTotalStaked(): Promise<string> {
+  const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
+  const api = await ApiPromise.create({ 
+    provider,
+    noInitWarn: true // This suppresses the "Not decorating unknown runtime apis" warning
+  });
+
+  try {
+    await api.isReady;
+    const totalStaked = await api.query.parachainStaking.totalCollatorStake();
+    // @ts-ignore
+    return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
+  } finally {
+    await api.disconnect();
+  }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    try {
-      // Check if the result is in the cache
-      const cachedResult = cache.get('totalStaked');
-      if (cachedResult !== undefined) {
-        return res.status(200).json(cachedResult);
-      }
-
-      const provider = new WsProvider('wss://parachain.curioinvest.com');
-      const api = await ApiPromise.create({ provider });
-
-      // Query the total staked amount
-      const totalStaked = await api.query.parachainStaking.totalCollatorStake();
-
-      await api.disconnect();
-
-      // Format the result
-      // @ts-ignore
-      const formattedResult = formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
-
-      // Store the result in the cache
-      cache.set('totalStaked', formattedResult);
-
-      return res.status(200).json(formattedResult);
-    } catch (err) {
-      console.error(`Error getting total staked tokens on Curio: ${err}`);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
-  } else {
+  if (req.method !== 'GET') {
     res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
+
+  try {
+    const cachedResult = cache.get(CACHE_KEY);
+    if (cachedResult !== undefined) {
+      return res.status(200).json(cachedResult);
+    }
+
+    const formattedResult = await getTotalStaked();
+    cache.set(CACHE_KEY, formattedResult);
+
+    return res.status(200).json(formattedResult);
+  } catch (err) {
+    console.error(`Error getting total staked tokens on Curio:`, err);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 }

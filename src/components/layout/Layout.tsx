@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react"
 import Footer from "./Footer";
 import Seo from "./SEO";
 import StarryBackground from '../ui/starry-background';
+import { BackgroundGradientAnimation } from '../ui/background-gradient-animation';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   

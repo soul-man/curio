@@ -1,24 +1,27 @@
 export const addresses = {
+    // Coingecko Endpoints
     gasPrice: 'https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=',
     marketDataCgt: 'https://api.coingecko.com/api/v3/coins/curio-gas-token',
     marketDataEth: 'https://api.coingecko.com/api/v3/coins/ethereum',
     marketDataSkale: 'https://api.coingecko.com/api/v3/coins/skale',
     marketDataBnb: 'https://api.coingecko.com/api/v3/coins/binancecoin',
     historicalDataCgt: 'https://api.coingecko.com/api/v3/coins/curio-gas-token/market_chart?vs_currency=usd&days=30&interval=daily',
-    // Provider
+    // Provider ETH
     providerEth: 'https://eth.llamarpc.com',
-
+    // Provider BSC
     providerBsc1: 'https://binance.llamarpc.com',
     providerBsc2: 'https://bsc-mainnet.infura.io/v3/',
     providerBsc3: 'https://bsc-dataseed1.binance.org:443',
-
     providerBsc4: 'https://bsc-dataseed.binance.org',
     providerBsc5: 'https://bsc-dataseed1.defibit.io',
     providerBsc6: 'https://bsc-dataseed1.ninicoin.io',
-    providerBscNew: 'https://bsc-mainnet.infura.io/v3/',
+    // Provider NEON
+    providerNeon: 'https://neon-proxy-mainnet.solana.p2p.org',
+    providerNeonDrpc: 'https://lb.drpc.org/ogrpc?network=neon-evm&dkey=Aj-GqjjG4kLLg088MNUvmnKibuYvexwR75BVhlDYfw4q',
+
+    // Provider OTHERS
     providerSkale: 'https://mainnet.skalenodes.com/v1/fit-betelgeuse',
     providerBoba: 'https://mainnet.boba.network',
-    providerNeon: 'https://neon-proxy-mainnet.solana.p2p.org',
 
     // Token Contract Address
     cgtToken_address: '0x0E186357c323c806C1efdad36D217F7a54b63D18',

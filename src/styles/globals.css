@@ -15,10 +15,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* html, body, #root {
-  font-family: 'Poppins', sans-serif !important;
-} */
-
 .apexcharts-xaxis-label {
   display: none;
   &:nth-child(5n){ display:revert; }
@@ -170,4 +166,20 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.7);
+}
+
+/* Loading Spinner */
+
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

@@ -116,7 +116,7 @@ const InfoBoxes = () => {
           <h3 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-5 text-black/90 dark:text-white md:!leading-[4.2rem]">Explore the Curio <span className="font-bold bg-gradient-to-r from-[#0A85E1] to-[#0763A7] inline-block text-transparent bg-clip-text"> Eco-System</span></h3>
           
           <p className="text-lg sm:text-xl md:text-2xl font-thin text-black/90 dark:dark:text-blue-300/80">
-            Discover Curio's comprehensive DeFi ecosystem, featuring Capital DEX and RWA tokenization. Engage in farming, staking, and liquidity provision across multiple chains, while benefiting from a regulated environment and innovative features like collateralized stablecoins.
+            Discover Curio&apos;s comprehensive DeFi ecosystem, featuring Capital DEX and RWA tokenization. Engage in farming, staking, and liquidity provision across multiple chains, while benefiting from a regulated environment and innovative features like collateralized stablecoins.
           </p>
         </div>
 

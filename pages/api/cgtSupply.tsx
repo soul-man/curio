@@ -1,10 +1,13 @@
 import cacheData from "memory-cache";
 import Web3 from "web3";
+import NodeCache from 'node-cache';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { TonClient } from 'ton';
 import { Address } from 'ton-core';
 import CgtOnBscABI from "@/utils/abis/CgtOnBsc.json";
 import { addresses } from "@/constant/address";
+
+const cache = new NodeCache({ stdTTL: 900 });
 
 // Interfaces
 interface SupplyResult {
@@ -43,8 +46,8 @@ const getSupplyOnChain = async (provider: string, address: string): Promise<numb
 
 const getSupplyOnKusama = async (): Promise<number> => {
   try {
-    const provider = new WsProvider('wss://parachain.curioinvest.com');
-    const api = await ApiPromise.create({ provider });
+    const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
+    const api = await ApiPromise.create({ provider, noInitWarn: true });
     const supply = await api.query.balances.totalIssuance();
     await api.disconnect();
     return Number(supply) / 10 ** DECIMALS;
@@ -56,7 +59,10 @@ const getSupplyOnKusama = async (): Promise<number> => {
 
 const getSupplyOnTon = async (): Promise<number> => {
   try {
-    const client = new TonClient({ endpoint: 'https://toncenter.com/api/v2/jsonRPC' });
+    const client = new TonClient({
+      endpoint: 'https://toncenter.com/api/v2/jsonRPC',
+      apiKey: process.env.NEXT_TONCENTER_RPC_API_KEY
+    });
     const tokenAddress = Address.parse(TON_ADDRESS);
     const { stack } = await client.runMethod(tokenAddress, 'get_jetton_data');
     const totalSupply = stack.readBigNumber();
@@ -69,6 +75,12 @@ const getSupplyOnTon = async (): Promise<number> => {
 
 // Main handler function
 export default async function handler(req: any, res: any) {
+
+  const cachedData = cache.get('supply');
+  if (cachedData) {
+    return res.status(200).json(cachedData);
+  }
+
   try {
     const [supplyOnBsc, supplyOnNeon, supplyOnKusama, supplyOnTon] = await Promise.all([
       getSupplyOnChain(addresses.providerBsc1, addresses.cgtOnBsc_address),
@@ -86,6 +98,8 @@ export default async function handler(req: any, res: any) {
       cgtSupplyOnKusama: supplyOnKusama,
       cgtSupplyOnTon: supplyOnTon,
     };
+
+    cache.set('allLiquidity', result);
 
     res.send(result);
   } catch (error) {
