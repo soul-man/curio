@@ -20,7 +20,7 @@
  
 ## Run the development server
 
-###Install:
+##Install:
 
 ```bash
 yarn install
@@ -35,18 +35,21 @@ To configure your Next.js application with the necessary environment variables, 
 2. **Add the following environment variables** to the `.env.local` file:
 
    ```plaintext
-   NEXT_INFURA_API_KEY=your_infura_api_key_here
-   NEXT_MORALIS_API_KEY=your_moralis_api_key_here
-   NEXT_HOST_BASE_URL=your_host_base_url_here
-   NEXT_TWITTER_BEARER_TOKEN=your_twitter_bearer_token_here
-   NEXT_TONCENTER_RPC_API_KEY=your_toncenter_rpc_api_key_here
+    NEXT_HOST_BASE_URL=your_host_base_url_here
+    NEXT_CURIO_PROVIDER=your_curio_provider_rpc_here
+    NEXT_INFURA_API_KEY=your_infura_api_key_here
+    NEXT_MORALIS_API_KEY=your_moralis_api_key_here
+    NEXT_TONCENTER_RPC_API_KEY=your_toncenter_rpc_api_key_here
    ```
 
 3. **Replace the placeholder values** with your actual API keys and URLs.
+4. Replace **your_curio_provider_rpc_here** with an RPC endpoint to talk to Curio Chain.
 
-These environment variables will be accessible in your application via `process.env`, allowing you to securely use sensitive information without hardcoding it into your source code.
 
-###Start the server using this command:
+
+These environment variables will be accessible in your application via `process.env`.
+
+##Start the server using this command:
 
 ```bash
 yarn dev

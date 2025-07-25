@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
 import stakingDefinition from '@/utils/definitions/stakingDefinition';
-import { getPolkadotApi } from '@/utils/getPolkadotApi';
 
 
 export interface WalletContextType {
@@ -49,15 +48,10 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return;
       }
 
-      // const provider = new WsProvider('wss://parachain.curioinvest.com');
-      // const api = await ApiPromise.create({ provider, noInitWarn: true, runtime: { ...stakingDefinition.runtime }});
-
-      const { api } = getPolkadotApi();
-      await api.isReadyOrError;
-
+      const provider = new WsProvider('wss://parachain.curioinvest.com');
+      const api = await ApiPromise.create({ provider, noInitWarn: true, runtime: { ...stakingDefinition.runtime }});
       await api.isReady;
       setApi(api);
-      console.log("api", api);
       setStatus('logged-in');
     } catch (error) {
       console.error('Error initializing wallet:', error);
