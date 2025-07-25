@@ -60,7 +60,7 @@ const Pools = () => {
 
   return (
     <>
-      <div id="pools" className="max-w-screen-2xl mx-auto px-2 md:px-5 mb-44">
+      <div id="pools" className="max-w-screen-2xl mx-auto px-2 md:px-10 mb-44">
         <motion.div 
           ref={ref}
           className='flex flex-col'
@@ -70,10 +70,10 @@ const Pools = () => {
         >
           <div className='flex flex-col md:flex-row justify-center items-center gap-2 md:gap-10 h-full mb-5 md:mb-10'>
             <motion.div className="w-full" variants={itemVariants}>
-              <h3 className="text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-sans font-bold mb-2 text-white/90 text-center md:text-right uppercase">
+              <h3 className="text-4xl sm:text-4xl md:text-4xl lg:text-5xl font-sans font-bold mb-2 text-white/90 text-center md:text-left uppercase">
                 <span className="font-bold bg-gradient-to-r from-[#224eae] to-[#0f9ef2] inline-block text-transparent bg-clip-text">Liquidity Pools</span>
               </h3>
-              <p className="text-md md:text-lg lg:text-xl font-thin text-blue-300 text-center md:text-right">
+              <p className="text-md md:text-lg lg:text-xl font-thin text-blue-300 text-center md:text-left">
                 Explore best liquidity across multiple chains and make informed decisions about where to trade, provide 
                 liquidity, or bridge your CGT tokens
               </p>

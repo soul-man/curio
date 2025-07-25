@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import NodeCache from 'node-cache';
+import { getPolkadotApi } from '@/utils/getPolkadotApi';
+
 import { BN } from '@polkadot/util';
 
 const DECIMALS = 18;
@@ -13,22 +15,36 @@ function formatBalance(balance: BN, decimals: number): number {
   return parseFloat(balance.toString()) / Math.pow(10, decimals);
 }
 
-async function getTotalStaked(): Promise<string> {
-  const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
-  const api = await ApiPromise.create({ 
-    provider,
-    noInitWarn: true // This suppresses the "Not decorating unknown runtime apis" warning
-  });
+async function getTotalStaked() {
 
-  try {
-    await api.isReady;
-    const totalStaked = await api.query.parachainStaking.totalCollatorStake();
-    // @ts-ignore
-    return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
-  } finally {
-    await api.disconnect();
-  }
+  const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER, 100);
+
+  const api = new ApiPromise({
+    provider,
+  });
+  
+  await api.isReady;
+  const totalStaked = await api.query.parachainStaking.totalCollatorStake();
+
+  console.log(totalStaked)
+  return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
 }
+
+// async function getTotalStaked(): Promise<string> {
+//   const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
+//   const api = await ApiPromise.create({ 
+//     provider,
+//     noInitWarn: true // This suppresses the "Not decorating unknown runtime apis" warning
+//   });
+
+//   try {
+//     await api.isReady;
+//     const totalStaked = await api.query.parachainStaking.totalCollatorStake();
+//     return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
+//   } finally {
+//     await api.disconnect();
+//   }
+// }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {

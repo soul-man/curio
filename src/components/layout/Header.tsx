@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
-// import PolkadotLogin from '../wallet/PolkadotLogin';
 const PolkadotLogin = dynamic(() => import('../wallet/Wallet'), { ssr: false });
 
 export default function Header() {
@@ -49,13 +48,8 @@ export default function Header() {
           <div className="flex flex-col space-y-3 px-4 text-center mb-5">
             <a href="#dashboard" className="text-white hover:text-blue-400 transition duration-300 uppercase text-sm">Analytics</a>
             <a href="#pools" className="text-white hover:text-blue-400 transition duration-300 uppercase text-sm">Pools</a>
-            {/* <a href="#trades" className="text-white hover:text-blue-400 transition duration-300 uppercase text-sm">Trades</a> */}
-            {/* <div className="pt-2">
-              <PolkadotLogin showInHeader={true} />
-            </div> */}
           </div>
           <PolkadotLogin />
-
         </nav>
       )}
     </header>

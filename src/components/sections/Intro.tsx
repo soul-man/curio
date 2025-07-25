@@ -140,7 +140,7 @@ const Intro = () => {
                   transition={{ delay: 1.4 }}
                 >
                   We offer unparalleled CGT analytics to support the CURIO DAO. 
-                  Explore our comprehensive Dashboards and keep track of market data.
+                  Explore our comprehensive Dashboards to keep track of all market data.
                 </motion.p>
               </div>
             </motion.div>

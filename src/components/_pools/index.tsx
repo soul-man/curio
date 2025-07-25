@@ -64,7 +64,7 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, index }) => {
       variants={itemVariants}
       initial="hidden"
       animate={inView ? "visible" : "hidden"} 
-      className="col-span-6 sm:col-span-4 md:col-span-6 lg:col-span-3"
+      className="col-span-6 md:col-span-6 lg:col-span-3"
     >
       <CardLayout gradientStart={pool.gradientStart} gradientEnd={pool.gradientEnd} padding="p-0">
         <div className="flex flex-col items-center justify-between gap-2 md:gap-3 h-full">
@@ -126,8 +126,32 @@ const PoolCard: React.FC<PoolCardProps> = ({ pool, index }) => {
           </div>
 
         </div>
-        <div className={`${pool.bgColor} text-sm font-normal w-full py-1 text-center text-white/80`}>
+        <div className={`${pool.bgColor} flex flex-row justify-center items-center text-sm font-normal w-full py-1 text-center text-white/80`}>
           {pool.chain}
+          {/* Blockchain Explorer Link */}
+          {pool.explorerLink !== "#" && pool.poolAddress !== "To be determined" && (
+            <a 
+              href={pool.explorerLink} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="ml-1 p-1 hover:bg-blue-500/20 rounded transition-colors duration-200"
+              title={`View pool on blockchain explorer: ${pool.poolAddress}`}
+            >
+              <svg 
+                className="w-4 h-4 text-white/80 hover:text-blue-100" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
+                />
+              </svg>
+            </a>
+          )}
         </div>
       </CardLayout>
     </motion.div>
