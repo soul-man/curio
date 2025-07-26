@@ -20,6 +20,21 @@
   &:nth-child(5n){ display:revert; }
 }
 
+/* Chart container styles */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+.chart-container .apexcharts-canvas {
+  position: relative !important;
+}
+
+/* ApexCharts v4 compatibility fixes */
+.apexcharts-svg {
+  background: transparent !important;
+}
+
 #curve {
   fill: transparent;
 }

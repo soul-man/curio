@@ -7,11 +7,11 @@ import LoginModal from './LoginModal';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { StakingService, SystemInfoService } from "@curiodao/capital-dex-sdk/polkadot";
 import { ApiPromise } from '@polkadot/api';
-import { BTreeMap, u128, u64 } from "@polkadot/types-codec";
+import { BTreeMap, u128, u32,u64 } from "@polkadot/types-codec";
 
 interface StakingData {
   unstaking: BTreeMap<u64, u128> | undefined;
-  currentBlock: u64 | undefined;
+  currentBlock: u32 | undefined;
 }
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -22,7 +22,7 @@ const Wallet: React.FC = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [unstaking, setUnstaking] = useState<BTreeMap<u64, u128>>();
-  const [currentBlock, setCurrentBlock] = useState<u64>();
+  const [currentBlock, setCurrentBlock] = useState<u32>();
 
   const { data, error, mutate } = useSWR(
     account ? `/api/curio-wallet-info?address=${account.address}` : null,
@@ -108,7 +108,6 @@ const Wallet: React.FC = () => {
           const initialStakingData = await fetchStakingData(account, api);
           setUnstaking(initialStakingData.unstaking);
           setCurrentBlock(initialStakingData.currentBlock);
-          console.log('Initialized staking data:', initialStakingData);
         } catch (error) {
           console.error('Error initializing wallet data:', error);
         }

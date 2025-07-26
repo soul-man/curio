@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { getPolkadotApi } from '@/utils/getPolkadotApi';
 import NodeCache from 'node-cache';
 import { getPolkadotApi } from '@/utils/getPolkadotApi';
 
@@ -16,17 +16,6 @@ function formatBalance(balance: BN, decimals: number): number {
 }
 
 async function getTotalStaked() {
-
-  const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER, 100);
-
-  const api = new ApiPromise({
-    provider,
-  });
-  
-  await api.isReady;
-  const totalStaked = await api.query.parachainStaking.totalCollatorStake();
-
-  console.log(totalStaked)
   return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
 }
 

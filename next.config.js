@@ -9,13 +9,6 @@ const nextConfig = {
     dirs: ['src'],
     ignoreDuringBuilds: false,
   },
-  env: {
-    NEXT_HOST_BASE_URL: process.env.NEXT_HOST_BASE_URL,
-    NEXT_CURIO_PROVIDER: process.env.NEXT_CURIO_PROVIDER,
-    NEXT_INFURA_API_KEY: process.env.NEXT_INFURA_API_KEY,
-    NEXT_MORALIS_API_KEY: process.env.NEXT_MORALIS_API_KEY,
-    NEXT_TONCENTER_RPC_API_KEY: process.env.NEXT_TONCENTER_RPC_API_KEY,
-  },
   reactStrictMode: true,
   swcMinify: true,
   // Uncoment to add domain whitelist

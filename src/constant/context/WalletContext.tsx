@@ -1,15 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
-import stakingDefinition from '@/utils/definitions/stakingDefinition';
-import { getPolkadotApi } from '@/utils/getPolkadotApi';
-
 
 export interface WalletContextType {
   account: any;
   setAccount: React.Dispatch<React.SetStateAction<any>>;
-  api: ApiPromise | null;
-  setApi: React.Dispatch<React.SetStateAction<ApiPromise | null>>;
+  chainInfo: ChainInfo | null;
+  setChainInfo: React.Dispatch<React.SetStateAction<ChainInfo | null>>;
   injector: any;
   setInjector: React.Dispatch<React.SetStateAction<any>>;
   isClient: boolean;
@@ -18,17 +14,22 @@ export interface WalletContextType {
   status: 'initial' | 'no-extension' | 'not-logged-in' | 'logged-in';
   setStatus: React.Dispatch<React.SetStateAction<'initial' | 'no-extension' | 'not-logged-in' | 'logged-in'>>;
   initializeWallet: (wallet: 'polkadot' | 'subwallet') => Promise<void>;
+  getBalance: (address: string) => Promise<any>;
+  // For SDK compatibility - this will be a client-side API instance
+  api: any;
+  setApi: React.Dispatch<React.SetStateAction<any>>;
 }
 
 export const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [account, setAccount] = useState<any>(null);
-  const [api, setApi] = useState<ApiPromise | null>(null);
+  const [chainInfo, setChainInfo] = useState<ChainInfo | null>(null);
   const [injector, setInjector] = useState<any>(null);
   const [isClient, setIsClient] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState<'polkadot' | 'subwallet' | null>(null);
   const [status, setStatus] = useState<'initial' | 'no-extension' | 'not-logged-in' | 'logged-in'>('initial');
+  const [api, setApi] = useState<any>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -48,16 +49,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setStatus('not-logged-in');
         return;
       }
-
-      // const provider = new WsProvider('wss://parachain.curioinvest.com');
-      // const api = await ApiPromise.create({ provider, noInitWarn: true, runtime: { ...stakingDefinition.runtime }});
-
-      const { api } = getPolkadotApi();
-      await api.isReadyOrError;
-
-      await api.isReady;
-      setApi(api);
-      console.log("api", api);
       setStatus('logged-in');
     } catch (error) {
       console.error('Error initializing wallet:', error);
@@ -65,11 +56,20 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
+  const getBalance = async (address: string) => {
+    try {
+      return await polkadotService.getBalance(address);
+    } catch (error) {
+      console.error('Error getting balance:', error);
+      throw error;
+    }
+  };
+
   const value = {
     account,
     setAccount,
-    api,
-    setApi,
+    chainInfo,
+    setChainInfo,
     injector,
     setInjector,
     isClient,
@@ -78,6 +78,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     status,
     setStatus,
     initializeWallet,
+    getBalance,
+    api,
+    setApi,
   };
 
   return <WalletContext.Provider value={value}>{children}</WalletContext.Provider>;
