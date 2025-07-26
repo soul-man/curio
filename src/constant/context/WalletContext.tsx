@@ -1,8 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { web3Enable, web3Accounts, web3FromSource } from '@polkadot/extension-dapp';
-import { polkadotService, ChainInfo } from '@/services/polkadotService';
-import { getClientPolkadotApi } from '@/utils/getClientPolkadotApi';
-
 
 export interface WalletContextType {
   account: any;
@@ -52,17 +49,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setStatus('not-logged-in');
         return;
       }
-
-      // Get chain info from server-side API (secure)
-      const chainInfo = await polkadotService.getChainInfo();
-      setChainInfo(chainInfo);
-
-      // Get provider URL and create client-side API for SDK compatibility
-      const configResponse = await fetch('/api/provider-config');
-      const { providerUrl } = await configResponse.json();
-      const { api } = await getClientPolkadotApi(providerUrl);
-      setApi(api);
-
       setStatus('logged-in');
     } catch (error) {
       console.error('Error initializing wallet:', error);

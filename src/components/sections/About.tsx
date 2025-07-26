@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { getPolkadotApi } from '@/utils/getPolkadotApi';
 
 export default function About() {
   const ref = useRef(null);
@@ -28,6 +29,10 @@ export default function About() {
       },
     },
   };
+
+  useEffect(() => {
+    getPolkadotApi();
+  }, []);
 
   return (
     <motion.div 
