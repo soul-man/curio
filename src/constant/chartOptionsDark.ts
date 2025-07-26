@@ -114,6 +114,7 @@ export const chartOptionsDark: ApexOptions = {
         dashArray: 0,
     },
     xaxis: {
+        type: 'datetime',
         axisBorder: {
             show: false
         },

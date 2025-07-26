@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { abbreviateNumber } from '../../utils/helpers';
-import { BTreeMap, u128, u64 } from "@polkadot/types-codec";
+import { BTreeMap, u128, u32,u64 } from "@polkadot/types-codec";
 import { StakingService, SystemInfoService } from "@curiodao/capital-dex-sdk/polkadot";
 import { useWallet } from '@/constant/context/WalletContext';
 import { toast } from 'react-toastify';
@@ -11,7 +11,7 @@ interface UnstakingDisplayProps {
   totalStaked: string;
   marketPrice: number;
   unstaking: BTreeMap<u64, u128> | undefined;
-  currentBlock: u64 | undefined;
+  currentBlock: u32 | undefined;
   updateWalletInfo: () => void;
 }
 

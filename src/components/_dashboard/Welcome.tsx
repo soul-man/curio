@@ -39,10 +39,10 @@ const Welcome = () => {
       className="col-span-12 lg:col-span-6 p-5 px-8"
     >
       <div className="h-full flex flex-col justify-end items-center lg:items-start">
-        <motion.h3 variants={itemVariants} className="text-center text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-7xl font-sans font-bold text-white/90 uppercase">
+        <motion.h3 variants={itemVariants} className="text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-7xl font-sans font-bold text-white/90 uppercase">
           <span className="font-bold bg-gradient-to-r from-[#224eae] to-[#0f9ef2] inline-block text-transparent bg-clip-text">CGT Analytics</span>
         </motion.h3>
-        <motion.p variants={itemVariants} className="mb-3 text-md font-normal md:text-xl lg:text-2xl text-white uppercase text-center md:text-right">
+        <motion.p variants={itemVariants} className="mb-3 text-md font-normal md:text-xl lg:text-2xl text-white uppercase">
           Comprehensive insights at your fingertips
         </motion.p>
         <motion.p variants={itemVariants} className="mb-7 lg:mb-0 text-md md:text-lg font-thin text-blue-300 text-center lg:text-left">

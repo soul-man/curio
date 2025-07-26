@@ -54,26 +54,35 @@ export default async function handler(req: any, res: any) {
         fetchWithRetry(urlMarketDataCgt),
         fetchWithRetry(urlHistoricalDataCgt)
       ]);
+      
+      // Check if required data exists
+      if (!marketData?.market_data) {
+        throw new Error('Market data is missing from CoinGecko response');
+      }
+      
+      if (!historicalData?.prices) {
+        throw new Error('Historical price data is missing from CoinGecko response');
+      }
 
       const cgtData = {
-        marketPrice: marketData.market_data.current_price.usd.toFixed(4),
-        marketPriceHigh_24h: marketData.market_data.high_24h.usd.toFixed(4),
-        marketPriceLow_24h: marketData.market_data.low_24h.usd.toFixed(4),
-        volume: marketData.market_data.total_volume.usd,
-        marketCap: marketData.market_data.market_cap.usd,
-        priceChange_24h: marketData.market_data.price_change_percentage_24h.toFixed(2),
-        priceChange_7d: marketData.market_data.price_change_percentage_7d.toFixed(2),
-        priceChange_14d: marketData.market_data.price_change_percentage_14d.toFixed(2),
-        priceChange_30d: marketData.market_data.price_change_percentage_30d.toFixed(2),
-        priceChange_60d: marketData.market_data.price_change_percentage_60d.toFixed(2),
-        ath: marketData.market_data.ath.usd.toFixed(4),
-        athTime: formatDate(marketData.market_data.ath_date.usd),
-        athChange: marketData.market_data.ath_change_percentage.usd.toFixed(2),
-        atl: marketData.market_data.atl.usd.toFixed(4),
-        atlTime: formatDate(marketData.market_data.atl_date.usd),
-        atlChange: marketData.market_data.atl_change_percentage.usd.toFixed(2),
-        marketCapRank: marketData.market_cap_rank,
-        historicalData: historicalData.prices
+        marketPrice: marketData.market_data.current_price?.usd?.toFixed(4) || '0.0000',
+        marketPriceHigh_24h: marketData.market_data.high_24h?.usd?.toFixed(4) || '0.0000',
+        marketPriceLow_24h: marketData.market_data.low_24h?.usd?.toFixed(4) || '0.0000',
+        volume: marketData.market_data.total_volume?.usd || 0,
+        marketCap: marketData.market_data.market_cap?.usd || 0,
+        priceChange_24h: marketData.market_data.price_change_percentage_24h?.toFixed(2) || '0.00',
+        priceChange_7d: marketData.market_data.price_change_percentage_7d?.toFixed(2) || '0.00',
+        priceChange_14d: marketData.market_data.price_change_percentage_14d?.toFixed(2) || '0.00',
+        priceChange_30d: marketData.market_data.price_change_percentage_30d?.toFixed(2) || '0.00',
+        priceChange_60d: marketData.market_data.price_change_percentage_60d?.toFixed(2) || '0.00',
+        ath: marketData.market_data.ath?.usd?.toFixed(4) || '0.0000',
+        athTime: marketData.market_data.ath_date?.usd ? formatDate(marketData.market_data.ath_date.usd) : 'N/A',
+        athChange: marketData.market_data.ath_change_percentage?.usd?.toFixed(2) || '0.00',
+        atl: marketData.market_data.atl?.usd?.toFixed(4) || '0.0000',
+        atlTime: marketData.market_data.atl_date?.usd ? formatDate(marketData.market_data.atl_date.usd) : 'N/A',
+        atlChange: marketData.market_data.atl_change_percentage?.usd?.toFixed(2) || '0.00',
+        marketCapRank: marketData.market_cap_rank || null,
+        historicalData: historicalData.prices || []
       };
 
       cache.set(urlMarketDataCgt, cgtData);
@@ -88,6 +97,17 @@ export default async function handler(req: any, res: any) {
     const cgtMarketData = await getCgtMarketData();
     res.status(200).json(cgtMarketData);
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while fetching data' });
+    console.error('API Error Details:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    const errorStack = error instanceof Error ? error.stack : 'No stack trace';
+    
+    console.error('Error message:', errorMessage);
+    console.error('Error stack:', errorStack);
+    
+    res.status(500).json({ 
+      error: 'An error occurred while fetching data',
+      details: errorMessage,
+      timestamp: new Date().toISOString()
+    });
   }
 }

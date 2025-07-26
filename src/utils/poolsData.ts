@@ -1,4 +1,23 @@
 import { PoolData } from "@/constant/types/PoolData";
+import { addresses } from "@/constant/address";
+
+// Helper function to generate explorer links based on chain
+const getExplorerLink = (address: string, chain: string): string => {
+    switch (chain) {
+        case "ETHEREUM":
+            return `https://etherscan.io/address/${address}`;
+        case "BSC":
+            return `https://bscscan.com/address/${address}`;
+        case "TON BLOCKCHAIN":
+            return `https://tonscan.org/address/${address}`;
+        case "CURIO CHAIN":
+            return `https://fit-betelgeuse.explorer.mainnet.skalenodes.com/address/${address}`;
+        case "Neon":
+            return `https://neonscan.org/address/${address}`;
+        default:
+            return "#";
+    }
+};
 
 export const getPoolsData = (liquidity: any): PoolData[] => {
     const ethLiquidity = liquidity.liquidity?.ETH || {};
@@ -22,7 +41,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-700/20",
             gradientEnd: "to-blue-900/20",
             dex: "Uniswap",
-            dexIcon: "/images/dex/uniswap.png"
+            dexIcon: "/images/dex/uniswap.png",
+            poolAddress: addresses.POOL_ETH_CGT_ETH,
+            explorerLink: getExplorerLink(addresses.POOL_ETH_CGT_ETH, "ETHEREUM")
         },
         {
             name: "CGT/WBNB",
@@ -38,7 +59,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-yellow-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Pancakeswap",
-            dexIcon: "/images/dex/pancakeswap.png"
+            dexIcon: "/images/dex/pancakeswap.png",
+            poolAddress: addresses.POOL_BSC_CGT_BNB,
+            explorerLink: getExplorerLink(addresses.POOL_BSC_CGT_BNB, "BSC")
         },
         {
             name: "CGT/USD₮",
@@ -54,7 +77,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-cyan-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: addresses.TON_POOL_CGTUSDT,
+            explorerLink: getExplorerLink(addresses.TON_POOL_CGTUSDT, "TON BLOCKCHAIN")
         },
         {
             name: "CGT/TON",
@@ -70,7 +95,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-cyan-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: addresses.TON_POOL_CGTTON,
+            explorerLink: getExplorerLink(addresses.TON_POOL_CGTTON, "TON BLOCKCHAIN")
         },
         {
             name: "CGT/USDC",
@@ -86,7 +113,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: "To be determined", // Placeholder - need to find actual pool address
+            explorerLink: "#" // Will be updated once pool address is available
         },
         {
             name: "CGT/DAI",
@@ -102,7 +131,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-blue-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: "To be determined", // Placeholder - need to find actual pool address
+            explorerLink: "#" // Will be updated once pool address is available
         },
         {
             name: "CGT/USDC",
@@ -118,7 +149,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-pink-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: addresses.POOL_NEON_CGT_USD,
+            explorerLink: getExplorerLink(addresses.POOL_NEON_CGT_USD, "Neon")
         },
         {
             name: "CGT/JSOL",
@@ -134,7 +167,9 @@ export const getPoolsData = (liquidity: any): PoolData[] => {
             gradientStart: "from-pink-500/30",
             gradientEnd: "to-blue-900/20",
             dex: "Capital DEX",
-            dexIcon: "/images/dex/capdex.png"
+            dexIcon: "/images/dex/capdex.png",
+            poolAddress: addresses.POOL_NEON_CGT_jSOL,
+            explorerLink: getExplorerLink(addresses.POOL_NEON_CGT_jSOL, "Neon")
         },
     ];
 };

@@ -13,4 +13,6 @@ export interface PoolData {
     gradientEnd: string;
     dex: string;
     dexIcon: string;
-  }
+    poolAddress: string;
+    explorerLink: string;
+}

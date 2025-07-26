@@ -77,8 +77,20 @@ const formatReserve = (value: bigint | number, decimals: number): number => {
 async function getPrices(): Promise<Prices> {
   try {
     const response = await fetch(process.env.NEXT_HOST_BASE_URL + '/api/marketPrices');
+    
+    if (!response.ok) {
+      throw new Error(`Market prices API returned ${response.status}`);
+    }
+    
     const data = await response.json();
-    return { 
+    
+    // Check if response contains error
+    if (data.error) {
+      throw new Error(`Market prices API error: ${data.error}${data.details ? ` - ${data.details}` : ''}`);
+    }
+    
+    // Validate that we have the required price data
+    const prices = { 
       cgt: data.cgt, 
       eth: data.eth, 
       bnb: data.bnb, 
@@ -89,8 +101,16 @@ async function getPrices(): Promise<Prices> {
       weth: data.eth,
       wbnb: data.bnb,
       neon: data.neon || 1,
-      jsol: data.jsol || 1 // Add JSOL price, default to 1 if not available
+      jsol: data.jsol
     };
+    
+    // Validate that required prices exist
+    if (!prices.cgt || !prices.eth || !prices.bnb || !prices.ton || !prices.jsol) {
+      throw new Error('Missing required price data from market prices API');
+    }
+    
+    console.log('Successfully fetched prices:', prices);
+    return prices;
   } catch (error) {
     console.error('Error fetching prices:', error);
     throw error;
@@ -145,8 +165,15 @@ async function getTonPoolLiquidity(client: TonClient, poolInfo: typeof poolsInfo
     const reserve1 = formatReserve(poolData.readBigNumber(), poolInfo.token1.decimals);
 
     const prices = await getPrices();
-    const token0UsdValue = reserve0 * prices[poolInfo.token0.symbol.toLowerCase() as PriceSymbol];
-    const token1UsdValue = reserve1 * prices[poolInfo.token1.symbol.toLowerCase() as PriceSymbol];
+    const token0Price = prices[poolInfo.token0.symbol.toLowerCase() as PriceSymbol];
+    const token1Price = prices[poolInfo.token1.symbol.toLowerCase() as PriceSymbol];
+    
+    if (token0Price === undefined || token1Price === undefined) {
+      throw new Error(`Price not available for ${poolInfo.token0.symbol} or ${poolInfo.token1.symbol}`);
+    }
+    
+    const token0UsdValue = reserve0 * token0Price;
+    const token1UsdValue = reserve1 * token1Price;
     const totalUsdValue = token0UsdValue + token1UsdValue;
 
     return {
@@ -199,8 +226,15 @@ async function getCurioPoolLiquidity(): Promise<{ [key: string]: { usdValue: str
         const token0Amount = bn0.div(new BN(10).pow(new BN(poolInfo.token0.decimals)));
         const token1Amount = bn1.div(new BN(10).pow(new BN(poolInfo.token1.decimals)));
 
-        const token0Price = new BN(Math.round(prices[poolInfo.token0.symbol.toLowerCase() as PriceSymbol] * 1e6));
-        const token1Price = new BN(Math.round(prices[poolInfo.token1.symbol.toLowerCase() as PriceSymbol] * 1e6));
+        const token0PriceValue = prices[poolInfo.token0.symbol.toLowerCase() as PriceSymbol];
+        const token1PriceValue = prices[poolInfo.token1.symbol.toLowerCase() as PriceSymbol];
+        
+        if (token0PriceValue === undefined || token1PriceValue === undefined) {
+          throw new Error(`Price not available for ${poolInfo.token0.symbol} or ${poolInfo.token1.symbol}`);
+        }
+        
+        const token0Price = new BN(Math.round(token0PriceValue * 1e6));
+        const token1Price = new BN(Math.round(token1PriceValue * 1e6));
 
         const token0UsdValue = token0Amount.mul(token0Price);
         const token1UsdValue = token1Amount.mul(token1Price);
@@ -288,11 +322,10 @@ async function getAllNetworksLiquidity() {
   const tonClient = new TonClient({ endpoint: 'https://toncenter.com/api/v2/jsonRPC' });
   const web3Neon = new Web3(new Web3.providers.HttpProvider('https://neon-proxy-mainnet.solana.p2p.org'));
 
-  const [ethLiquidity, bscLiquidity, tonLiquidity, curioLiquidity, neonLiquidity] = await Promise.all([
+  const [ethLiquidity, bscLiquidity, tonLiquidity, neonLiquidity] = await Promise.all([
     Promise.all(poolsInfo.ETH.map(pool => getEthBscPoolLiquidity(web3Eth, pool, 'ETH'))),
     Promise.all(poolsInfo.BSC.map(pool => getEthBscPoolLiquidity(web3Bsc, pool, 'BSC'))),
     Promise.all(poolsInfo.TON.map(pool => getTonPoolLiquidity(tonClient, pool))),
-    getCurioPoolLiquidity(),
     Promise.all(poolsInfo.NEON.map(pool => getNeonPoolLiquidity(web3Neon, pool)))
   ]);
 
@@ -300,7 +333,6 @@ async function getAllNetworksLiquidity() {
     ETH: Object.fromEntries(poolsInfo.ETH.map((pool, index) => [pool.name, ethLiquidity[index]])),
     BSC: Object.fromEntries(poolsInfo.BSC.map((pool, index) => [pool.name, bscLiquidity[index]])),
     TON: Object.fromEntries(poolsInfo.TON.map((pool, index) => [pool.name, tonLiquidity[index]])),
-    CURIO: curioLiquidity,
     NEON: Object.fromEntries(poolsInfo.NEON.map((pool, index) => [pool.name, neonLiquidity[index]]))
   };
 }

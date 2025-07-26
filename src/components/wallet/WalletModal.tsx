@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import dynamic from 'next/dynamic';
-import { BTreeMap, u128, u64 } from "@polkadot/types-codec";
+import { BTreeMap, u128, u32, u64 } from "@polkadot/types-codec";
 import { motion, AnimatePresence } from 'framer-motion'; // Import framer-motion and AnimatePresence
 import BalanceDisplay from './BalanceDisplay';
 import UnstakingDisplay from './UnstakingDisplay';
@@ -18,7 +18,7 @@ interface UserModalProps {
   updateWalletInfo: () => void;
   handleLogout: () => void;
   unstaking: BTreeMap<u64, u128> | undefined;
-  currentBlock: u64 | undefined;
+  currentBlock: u32 | undefined;
 }
 
 const WalletModal: React.FC<UserModalProps> = ({

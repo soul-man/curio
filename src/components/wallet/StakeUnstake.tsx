@@ -36,7 +36,7 @@ const StakeUnstake: React.FC<StakeUnstakeProps> = ({ transferableBalance, totalS
 
           const systemInfo = new SystemInfoService(api);
           const currentBlock = await systemInfo.currentBlock();
-          setCurrentBlock(currentBlock);
+          setCurrentBlock(api.createType('u64', currentBlock));
         } catch (error) {
           console.error('Error fetching unstaking data:', error);
         }

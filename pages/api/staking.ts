@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiPromise, WsProvider } from '@polkadot/api';
+import { getPolkadotApi } from '@/utils/getPolkadotApi';
 import NodeCache from 'node-cache';
 import { BN } from '@polkadot/util';
 
@@ -13,21 +13,12 @@ function formatBalance(balance: BN, decimals: number): number {
   return parseFloat(balance.toString()) / Math.pow(10, decimals);
 }
 
-async function getTotalStaked(): Promise<string> {
-  const provider = new WsProvider(process.env.NEXT_CURIO_PROVIDER);
-  const api = await ApiPromise.create({ 
-    provider,
-    noInitWarn: true // This suppresses the "Not decorating unknown runtime apis" warning
-  });
+async function getTotalStaked() {
+  const { api } = getPolkadotApi();
+  await api.isReady;
+  const totalStaked = await api.query.parachainStaking.totalCollatorStake();
 
-  try {
-    await api.isReady;
-    const totalStaked = await api.query.parachainStaking.totalCollatorStake();
-    // @ts-ignore
-    return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
-  } finally {
-    await api.disconnect();
-  }
+  return formatBalance(totalStaked.delegators, DECIMALS).toFixed(0);
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

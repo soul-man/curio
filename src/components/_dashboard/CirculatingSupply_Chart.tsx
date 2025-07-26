@@ -1,8 +1,12 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
+import ChartWrapper from '@/components/ui/ChartWrapper';
 
-const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
+const Chart = dynamic(() => import('react-apexcharts'), { 
+  ssr: false,
+  loading: () => <div className="text-white">Loading chart...</div>
+});
 
 interface CirculatingSupplyChartProps {
   supply: {
@@ -15,12 +19,23 @@ interface CirculatingSupplyChartProps {
 }
 
 const CirculatingSupplyChart: React.FC<CirculatingSupplyChartProps> = ({ supply }) => {
+  // Add safety checks for supply data
+  if (!supply) {
+    return (
+      <div className="chart-container">
+        <div className="flex items-center justify-center h-64 text-gray-400">
+          No supply data available
+        </div>
+      </div>
+    );
+  }
+
   const rawData = [
-    { chain: 'ETH', value: supply.cgtSupplyOnEth },
-    { chain: 'BSC', value: supply.cgtSupplyOnBsc },
-    { chain: 'CURIO', value: supply.cgtSupplyOnKusama },
-    { chain: 'TON', value: supply.cgtSupplyOnTon },
-    { chain: 'NEON', value: supply.cgtSupplyOnNeon },
+    { chain: 'ETH', value: supply.cgtSupplyOnEth || 0 },
+    { chain: 'BSC', value: supply.cgtSupplyOnBsc || 0 },
+    { chain: 'CURIO', value: supply.cgtSupplyOnKusama || 0 },
+    { chain: 'TON', value: supply.cgtSupplyOnTon || 0 },
+    { chain: 'NEON', value: supply.cgtSupplyOnNeon || 0 },
   ].sort((a, b) => b.value - a.value); // Sort from highest to lowest
 
   const maxValue = Math.max(...rawData.map(item => item.value));
@@ -44,7 +59,6 @@ const CirculatingSupplyChart: React.FC<CirculatingSupplyChartProps> = ({ supply 
 
   const chartOptions: ApexOptions = {
     chart: {
-      type: 'bar',
       height: 400,
       foreColor: '#5E6DAA',
       toolbar: {
@@ -69,10 +83,11 @@ const CirculatingSupplyChart: React.FC<CirculatingSupplyChartProps> = ({ supply 
         colors: ['#F4F6FF'],
       },
       formatter: function (val, opt) {
-        return rawData[opt.dataPointIndex].chain;
+        return rawData[opt.dataPointIndex]?.chain || 'Unknown';
       },
     },
     xaxis: {
+      type: 'category',
       categories: rawData.map(item => item.chain),
       labels: {
         show: false,
@@ -97,8 +112,12 @@ const CirculatingSupplyChart: React.FC<CirculatingSupplyChartProps> = ({ supply 
       shared: true,
       intersect: false,
       custom: function({ series, seriesIndex, dataPointIndex, w }) {
-        const value = rawData[dataPointIndex].value;
-        const chainName = rawData[dataPointIndex].chain;
+        // Add safety checks for undefined values
+        if (!rawData[dataPointIndex]) {
+          return '<div class="px-2 py-1 bg-white text-black font-light"><span>No data</span></div>';
+        }
+        const value = rawData[dataPointIndex].value || 0;
+        const chainName = rawData[dataPointIndex].chain || 'Unknown';
         return (
           '<div class="px-2 py-1 bg-white text-black font-light">' +
           "<span>" +
@@ -120,8 +139,10 @@ const CirculatingSupplyChart: React.FC<CirculatingSupplyChartProps> = ({ supply 
   };
 
   return (
-    <div>
-      <Chart options={chartOptions} series={[{ data: adjustedData }]} type="bar" height={320} />
+    <div className="chart-container">
+      <ChartWrapper>
+        <Chart options={chartOptions} series={[{ data: adjustedData }]} type="bar" height={320} />
+      </ChartWrapper>
     </div>
   );
 };
